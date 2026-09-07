@@ -105,3 +105,61 @@ def calculate_tiered_electricity(
         total_rounded=total_rounded,
         breakdown=tuple(breakdown_lines),
     )
+    
+def calculate_flat_fallback_electricity(
+    consumption: str | int | Decimal,
+    config: RentCalcConfig,
+) -> ElectricityResult:
+    """Tính tiền điện trong trường hợp không kê khai đầy đủ người thuê trọ.
+
+    Quy định:
+        Khi chủ nhà trọ không thực hiện kê khai tạm trú / số người sử dụng,
+        toàn bộ sản lượng điện tiêu thụ bị áp đồng giá theo đơn giá của Bậc 3 (mặc định 2.380 đ/kWh)
+        cộng thêm 8% VAT.
+        Căn cứ: Thông tư số 60/2025/TT-BCT.
+    """
+    cons = to_decimal(consumption)
+    if cons < Decimal("0"):
+        raise InputError(f"Sản lượng điện tiêu thụ không được là số âm: {consumption}")
+
+    fallback_num = config.electricity.fallback_tier_number
+    fallback_tier = next(
+        (tier for tier in config.electricity.tiers if tier.number == fallback_num),
+        None,
+    )
+
+    if fallback_tier is None:
+        raise ConfigError(f"Không tìm thấy bậc điện fallback số {fallback_num} trong cấu hình biểu giá")
+
+    unit_price = to_decimal(fallback_tier.unit_price)
+    if unit_price < Decimal("0"):
+        raise ConfigError(f"Đơn giá bậc fallback không hợp lệ: {fallback_tier.unit_price}")
+
+    subtotal = cons * unit_price
+    vat_rate = to_decimal(config.electricity.vat_rate)
+    vat = subtotal * vat_rate
+    total_exact = subtotal + vat
+    total_rounded = round_vnd(total_exact)
+
+    breakdown_lines = (
+        ElectricityBreakdownLine(
+            tier_number=fallback_tier.number,
+            tier_name=f"{fallback_tier.name} (Đồng giá không kê khai)",
+            consumption=cons,
+            unit_price=unit_price,
+            amount=subtotal,
+        ),
+    )
+
+    return ElectricityResult(
+        method="flat_fallback",
+        people_count=0,
+        quota=None,
+        consumption=cons,
+        subtotal=subtotal,
+        vat_rate=vat_rate,
+        vat=vat,
+        total_exact=total_exact,
+        total_rounded=total_rounded,
+        breakdown=breakdown_lines,
+    )
