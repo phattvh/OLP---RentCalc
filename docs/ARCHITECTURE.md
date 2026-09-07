@@ -1,6 +1,6 @@
 # Kiến Trúc Hệ Thống RentCalc
 
-> Trạng thái: **DRAFT v0.1** (Sẽ được rà soát và chốt ở Bước 6 sau khi hoàn thiện mã nguồn).
+> Trạng thái: **VERIFIED v0.2** (Khớp 100% với cài đặt `app/core` và 32/32 tests passed).
 
 ---
 
