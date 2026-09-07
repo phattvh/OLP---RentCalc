@@ -54,7 +54,17 @@ def calculate_tiered_electricity(
     for idx, tier in enumerate(sorted_tiers):
         is_last_tier = idx == len(sorted_tiers) - 1
 
+        # 1. Validate đơn giá của mọi bậc (kể cả bậc cuối vô hạn)
+        unit_price = to_decimal(tier.unit_price)
+        if unit_price < Decimal("0"):
+            raise ConfigError(f"Đơn giá của bậc {tier.number} không được là số âm: {tier.unit_price}")
+
+        # 2. Phân bổ sản lượng theo bậc
         if tier.base_quantity is None:
+            if not is_last_tier:
+                raise ConfigError(
+                    f"Bậc {tier.number} không có giới hạn sản lượng nhưng không phải bậc cuối cùng"
+                )
             tier_consumption = remaining
         else:
             base_q = to_decimal(tier.base_quantity)
@@ -63,10 +73,6 @@ def calculate_tiered_electricity(
 
             tier_limit = base_q * quota
             tier_consumption = min(remaining, tier_limit)
-
-        unit_price = to_decimal(tier.unit_price)
-        if unit_price < Decimal("0"):
-            raise ConfigError(f"Đơn giá của bậc {tier.number} không được là số âm: {tier.unit_price}")
 
         amount = tier_consumption * unit_price
         subtotal += amount

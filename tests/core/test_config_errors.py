@@ -3,6 +3,7 @@
 """Kiểm thử cấu hình lỗi theo docs/CALCULATION_RULES.md §10."""
 
 import pytest
+from dataclasses import replace
 
 from app.core.electricity import calculate_tiered_electricity
 from app.core.errors import ConfigError
@@ -50,3 +51,18 @@ def test_config_negative_vat_rate():
     )
     with pytest.raises(ConfigError):
         calculate_tiered_electricity("100", 4, config)
+
+def test_negative_price_in_infinite_tier_rejected(official_config):
+    # Cấu hình bậc 6 có đơn giá âm (-1000)
+    bad = replace(
+        official_config,
+        electricity=replace(
+            official_config.electricity,
+            tiers=tuple(
+                replace(t, unit_price="-1000") if t.number == 6 else t
+                for t in official_config.electricity.tiers
+            ),
+        ),
+    )
+    with pytest.raises(ConfigError):
+        calculate_tiered_electricity("120", 4, bad)

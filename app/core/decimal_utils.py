@@ -1,5 +1,8 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
+# Thiết lập độ chính xác 50 chữ số áp dụng toàn cục cho toàn bộ tiến trình tính toán tài chính của RentCalc.
+# Đây là thiết kế có chủ đích để triệt tiêu hoàn toàn sai số làm tròn số thực.
+
 """Tiện ích số học chính xác cao và làm tròn nửa lên. Xem docs/CALCULATION_RULES.md §7."""
 
 from decimal import Decimal, ROUND_HALF_UP, getcontext
