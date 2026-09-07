@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
-"""Tiện ích số học chính xác tuyệt đối (Strict Decimal Utilities) cho RentCalc."""
+"""Tiện ích số học chính xác cao và làm tròn nửa lên. Xem docs/CALCULATION_RULES.md §7."""
 
 from decimal import Decimal, ROUND_HALF_UP, getcontext
 

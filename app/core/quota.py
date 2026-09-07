@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
-"""Module tính toán định mức số hộ dùng điện theo quy định pháp luật."""
+"""Module tính toán định mức số hộ dùng điện. Xem docs/CALCULATION_RULES.md §4.3.
+Căn cứ pháp lý: TT 60/2025/TT-BCT; QĐ 1279/QĐ-BCT."""
 
 from decimal import Decimal
 

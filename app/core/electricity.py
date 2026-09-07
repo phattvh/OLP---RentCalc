@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
-"""Module tính toán chi phí điện sinh hoạt: Biểu giá bậc thang và đồng giá không kê khai."""
+"""Biểu giá bậc thang cộng dồn và áp bậc 3 không kê khai. Xem docs/CALCULATION_RULES.md §4.
+Căn cứ pháp lý: QĐ 1279/QĐ-BCT; TT 60/2025/TT-BCT; NQ 204/2025/QH15."""
 
 from decimal import Decimal
 

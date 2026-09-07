@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
-"""Module xử lý chỉ số và tính toán điện năng tiêu thụ qua công tơ cơ khí."""
+"""Module xử lý chỉ số và quay vòng công tơ cơ khí. Xem docs/CALCULATION_RULES.md §5."""
 
 import re
 from decimal import Decimal

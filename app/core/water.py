@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
-"""Module tính toán chi phí nước sinh hoạt theo khối hoặc theo đầu người."""
+"""Module tính toán chi phí nước sinh hoạt. Xem docs/CALCULATION_RULES.md §6."""
 
 from decimal import Decimal
 
