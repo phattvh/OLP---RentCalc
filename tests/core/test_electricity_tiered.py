@@ -46,7 +46,7 @@ def test_quota_zero_all_fallback_to_last_tier(official_config):
     # Theo chính sách §10: Q=0 thì các bậc hữu hạn = 0, toàn bộ rơi bậc 6
     r = calculate_tiered_electricity("100", 0, official_config)
     assert r.quota == D("0")
-    assert r.breakdown[5].consumption == D("100")
+    assert r.breakdown[-1].consumption == D("100")
     assert r.subtotal == D("100") * D("3460")
 
 
