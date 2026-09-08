@@ -18,8 +18,7 @@ router = APIRouter()
 def new_reading_form(room_id: int, request: Request, db: Session = Depends(get_db)):
     room = RoomRepository(db).get(room_id)
     return templates.TemplateResponse(
-        "meter_readings/form.html.j2",
-        {"request": request, "room": room},
+        request=request, name="meter_readings/form.html.j2", context={"room": room}
     )
 
 

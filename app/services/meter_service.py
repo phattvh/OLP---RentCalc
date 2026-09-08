@@ -32,8 +32,8 @@ class MeterService:
         max_val = core_config.meter.max_value
 
         consumption = calculate_consumption(
-            start=start_reading,
-            end=end_reading,
+            start_reading=start_reading,
+            end_reading=end_reading,
             max_value=max_val,
         )
 

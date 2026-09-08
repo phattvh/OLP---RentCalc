@@ -25,9 +25,9 @@ def index(request: Request, db: Session = Depends(get_db)):
     total_rooms = sum(len(p.rooms) for p in properties)
 
     return templates.TemplateResponse(
-        "dashboard/index.html.j2",
-        {
-            "request": request,
+        request=request,
+        name="dashboard/index.html.j2",
+        context={
             "properties": properties,
             "total_properties": len(properties),
             "total_rooms": total_rooms,

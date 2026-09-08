@@ -19,16 +19,14 @@ def list_properties(request: Request, db: Session = Depends(get_db)):
     repo = PropertyRepository(db)
     properties = repo.list_all()
     return templates.TemplateResponse(
-        "properties/list.html.j2",
-        {"request": request, "properties": properties},
+        request=request, name="properties/list.html.j2", context={"properties": properties}
     )
 
 
 @router.get("/new", response_class=HTMLResponse)
 def new_property_form(request: Request):
     return templates.TemplateResponse(
-        "properties/form.html.j2",
-        {"request": request, "property": None},
+        request=request, name="properties/form.html.j2", context={"property": None}
     )
 
 
@@ -52,8 +50,7 @@ def property_detail(property_id: int, request: Request, db: Session = Depends(ge
     if not prop:
         return RedirectResponse("/properties", status_code=303)
     return templates.TemplateResponse(
-        "properties/detail.html.j2",
-        {"request": request, "property": prop},
+        request=request, name="properties/detail.html.j2", context={"property": prop}
     )
 
 

@@ -19,8 +19,7 @@ router = APIRouter(prefix="/invoices")
 def list_invoices(request: Request, db: Session = Depends(get_db)):
     invoices = InvoiceRepository(db).list_by_property(property_id=1)
     return templates.TemplateResponse(
-        "invoices/list.html.j2",
-        {"request": request, "invoices": invoices},
+        request=request, name="invoices/list.html.j2", context={"invoices": invoices}
     )
 
 
@@ -45,9 +44,9 @@ def invoice_detail(invoice_id: int, request: Request, db: Session = Depends(get_
     share_token = sharing_service.get_or_create_token(invoice_id)
 
     return templates.TemplateResponse(
-        "invoices/detail.html.j2",
-        {
-            "request": request,
+        request=request,
+        name="invoices/detail.html.j2",
+        context={
             "invoice": invoice,
             "share_token": share_token,
             "calc": invoice.calculation_result,

@@ -19,16 +19,14 @@ def list_configs(request: Request, db: Session = Depends(get_db)):
     service = ConfigService(db)
     configs = service.list_all()
     return templates.TemplateResponse(
-        "admin/configs/list.html.j2",
-        {"request": request, "configs": configs},
+        request=request, name="admin/configs/list.html.j2", context={"configs": configs}
     )
 
 
 @router.get("/configs/new", response_class=HTMLResponse)
 def new_config_form(request: Request):
     return templates.TemplateResponse(
-        "admin/configs/form.html.j2",
-        {"request": request},
+        request=request, name="admin/configs/form.html.j2", context={}
     )
 
 

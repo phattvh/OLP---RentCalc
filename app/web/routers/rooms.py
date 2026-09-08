@@ -19,8 +19,7 @@ router = APIRouter()
 def new_room_form(property_id: int, request: Request, db: Session = Depends(get_db)):
     prop = PropertyRepository(db).get(property_id)
     return templates.TemplateResponse(
-        "rooms/form.html.j2",
-        {"request": request, "property": prop, "room": None},
+        request=request, name="rooms/form.html.j2", context={"property": prop, "room": None}
     )
 
 
@@ -55,8 +54,7 @@ def room_detail(room_id: int, request: Request, db: Session = Depends(get_db)):
     if not room:
         return RedirectResponse("/properties", status_code=303)
     return templates.TemplateResponse(
-        "rooms/detail.html.j2",
-        {"request": request, "room": room},
+        request=request, name="rooms/detail.html.j2", context={"room": room}
     )
 
 
