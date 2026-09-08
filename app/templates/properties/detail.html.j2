@@ -1,0 +1,63 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ property.name }} - RentCalc{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-start border-b pb-5 border-gray-200">
+        <div>
+            <div class="flex items-center space-x-2">
+                <a href="/properties" class="text-gray-400 hover:text-gray-600 text-sm">&larr; Quay lại danh sách</a>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900 mt-2">{{ property.name }}</h1>
+            <p class="text-sm text-gray-500">📍 {{ property.address or "Chưa có địa chỉ" }}</p>
+        </div>
+        <div class="flex space-x-3">
+            <a href="/properties/{{ property.id }}/rooms/new" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition">
+                + Thêm phòng
+            </a>
+            <form action="/properties/{{ property.id }}/delete" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa cơ sở này?');">
+                <button type="submit" class="px-4 py-2 bg-red-50 text-red-600 text-sm font-medium rounded-md hover:bg-red-100 transition">Xóa cơ sở</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Danh sách phòng -->
+    <div class="bg-white shadow rounded-lg border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-bold text-gray-900">Danh sách phòng trọ ({{ property.rooms|length }})</h2>
+        </div>
+        <div class="divide-y divide-gray-200">
+            {% for room in property.rooms %}
+            <div class="p-6 flex items-center justify-between hover:bg-gray-50 transition">
+                <div>
+                    <a href="/rooms/{{ room.id }}" class="text-base font-bold text-indigo-600 hover:underline">{{ room.name }}</a>
+                    <div class="flex items-center space-x-3 text-xs text-gray-500 mt-1">
+                        <span>👥 {{ room.people_count }} người</span>
+                        <span>•</span>
+                        <span>💧 {% if room.water_billing_mode == 'volume' %}Theo khối (m³){% else %}Khoán đầu người{% endif %}</span>
+                        <span>•</span>
+                        {% if room.is_declared %}
+                        <span class="text-green-700 bg-green-50 px-2 py-0.5 rounded font-medium">✓ Đã kê khai tạm trú</span>
+                        {% else %}
+                        <span class="text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium">⚠️ Chưa kê khai (Áp bậc 3)</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <a href="/rooms/{{ room.id }}/readings/new" class="px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded hover:bg-blue-100 transition">
+                        + Nhập chỉ số
+                    </a>
+                    <a href="/rooms/{{ room.id }}" class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-semibold rounded hover:bg-gray-200 transition">
+                        Chi tiết
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="p-8 text-center text-gray-500">
+                Cơ sở này chưa có phòng nào. Hãy bấm <strong>+ Thêm phòng</strong> ở góc trên!
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

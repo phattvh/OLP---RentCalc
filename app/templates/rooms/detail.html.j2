@@ -1,0 +1,86 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ room.name }} - RentCalc{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-start border-b pb-5 border-gray-200">
+        <div>
+            <a href="/properties/{{ room.property_id }}" class="text-xs text-gray-500 hover:underline">&larr; Quay lại cơ sở</a>
+            <h1 class="text-2xl font-bold text-gray-900 mt-1">{{ room.name }}</h1>
+            <div class="flex items-center space-x-3 text-sm text-gray-500 mt-1">
+                <span>Số người: <strong>{{ room.people_count }}</strong></span>
+                <span>•</span>
+                <span>Nước: <strong>{% if room.water_billing_mode == 'volume' %}Theo khối{% else %}Khoán người{% endif %}</strong></span>
+                <span>•</span>
+                <span>Trạng thái: <strong>{% if room.is_declared %}Đã kê khai{% else %}Chưa kê khai (Áp bậc 3){% endif %}</strong></span>
+            </div>
+        </div>
+        <div class="flex space-x-3">
+            <a href="/rooms/{{ room.id }}/readings/new" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition">
+                + Nhập chỉ số công tơ
+            </a>
+            <form action="/rooms/{{ room.id }}/delete" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phòng này?');">
+                <button type="submit" class="px-4 py-2 bg-red-50 text-red-600 text-sm font-medium rounded-md hover:bg-red-100 transition">Xóa phòng</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Khối phát hành hóa đơn mới -->
+    <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-5">
+        <h3 class="text-sm font-bold text-indigo-900 uppercase tracking-wide">Phát hành hóa đơn tính tiền</h3>
+        <form action="/invoices/generate" method="POST" class="mt-3 flex flex-wrap items-end gap-3">
+            <input type="hidden" name="room_id" value="{{ room.id }}">
+            <div>
+                <label class="block text-xs font-medium text-indigo-800">Tháng tính tiền (YYYY-MM)</label>
+                <input type="month" name="month" required class="mt-1 px-3 py-1.5 border border-indigo-300 rounded text-sm bg-white">
+            </div>
+            <button type="submit" class="px-4 py-2 bg-indigo-700 text-white text-sm font-medium rounded hover:bg-indigo-800 transition">
+                ⚡ Tính tiền & Xuất hóa đơn
+            </button>
+        </form>
+    </div>
+
+    <!-- Lịch sử chỉ số công tơ -->
+    <div class="bg-white shadow rounded-lg border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-base font-bold text-gray-900">Lịch sử chỉ số công tơ đã ghi</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-medium text-gray-500">Tháng</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-500">Loại</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500">Số đầu</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500">Số cuối</th>
+                        <th class="px-6 py-3 text-right font-bold text-gray-700">Sản lượng tiêu thụ</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for r in room.meter_readings %}
+                    <tr>
+                        <td class="px-6 py-3 font-mono font-medium">{{ r.month }}</td>
+                        <td class="px-6 py-3">
+                            {% if r.meter_type == 'electricity' %}
+                            <span class="text-amber-800 bg-amber-50 px-2 py-0.5 rounded text-xs font-semibold">⚡ Điện</span>
+                            {% else %}
+                            <span class="text-blue-800 bg-blue-50 px-2 py-0.5 rounded text-xs font-semibold">💧 Nước</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-3 text-right font-mono">{{ r.start_reading }}</td>
+                        <td class="px-6 py-3 text-right font-mono">{{ r.end_reading }}</td>
+                        <td class="px-6 py-3 text-right font-mono font-bold text-indigo-600">
+                            {{ r.consumption }} {% if r.meter_type == 'electricity' %}kWh{% else %}m³{% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-6 text-center text-gray-400">Chưa có chỉ số công tơ nào được ghi nhận.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

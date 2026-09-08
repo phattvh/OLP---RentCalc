@@ -1,0 +1,38 @@
+{% extends "base.html.j2" %}
+{% block title %}Danh sách cơ sở - RentCalc{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center border-b pb-5 border-gray-200">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Cơ sở cho thuê</h1>
+            <p class="text-sm text-gray-500">Quản lý các dãy phòng trọ hoặc tòa nhà chung cư mini.</p>
+        </div>
+        <a href="/properties/new" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition">
+            + Thêm cơ sở
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for prop in properties %}
+        <div class="bg-white shadow rounded-lg border border-gray-100 p-6 flex flex-col justify-between">
+            <div>
+                <h3 class="text-lg font-bold text-gray-900">{{ prop.name }}</h3>
+                <p class="text-sm text-gray-500 mt-1">📍 {{ prop.address or "Chưa cập nhật địa chỉ" }}</p>
+                {% if prop.description %}
+                <p class="text-xs text-gray-600 mt-2 bg-gray-50 p-2 rounded">{{ prop.description }}</p>
+                {% endif %}
+            </div>
+            <div class="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center">
+                <span class="text-sm font-medium text-gray-600">🚪 {{ prop.rooms|length }} phòng</span>
+                <a href="/properties/{{ prop.id }}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800">Chi tiết &rarr;</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-span-full bg-white p-12 text-center rounded-lg border border-dashed border-gray-300 text-gray-500">
+            Chưa có cơ sở cho thuê nào. Bấm nút <strong>Thêm cơ sở</strong> ở góc trên để tạo mới.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
