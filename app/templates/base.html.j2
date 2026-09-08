@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}RentCalc - Minh Bạch Chi Phí Dịch Vụ Nhà Trọ{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/app.css">
+    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col text-gray-900 antialiased font-sans">
+    <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <a href="/" class="flex items-center space-x-2 font-black text-xl tracking-tight hover:text-indigo-100 transition">
+                        <span class="bg-white text-indigo-700 rounded-lg p-1.5 font-mono shadow-sm">⚡💧</span>
+                        <span>RentCalc</span>
+                    </a>
+                    <span class="hidden sm:inline-block px-2 py-0.5 text-xs bg-indigo-800 text-indigo-200 rounded font-mono">v0.2.0</span>
+                </div>
+                <nav class="flex space-x-1 sm:space-x-4 text-sm font-medium">
+                    <a href="/" class="px-3 py-2 rounded-md hover:bg-indigo-600 transition">Tổng quan</a>
+                    <a href="/properties" class="px-3 py-2 rounded-md hover:bg-indigo-600 transition">Cơ sở & Phòng</a>
+                    <a href="/invoices" class="px-3 py-2 rounded-md hover:bg-indigo-600 transition">Hóa đơn</a>
+                    <a href="/admin/configs" class="px-3 py-2 rounded-md hover:bg-indigo-600 transition">Cấu hình biểu giá</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-6 text-center text-xs text-gray-500">
+        <p>RentCalc — Dự án phần mềm nguồn mở minh bạch hóa chi phí thiết yếu theo QĐ 1279/QĐ-BCT, TT 60/2025/TT-BCT & NĐ 133/2026/NĐ-CP.</p>
+        <p class="mt-1">Giấy phép mã nguồn mở MIT. Copyright &copy; 2026 Phat Tran Vu Hoa.</p>
+    </footer>
+</body>
+</html>
