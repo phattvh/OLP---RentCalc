@@ -43,3 +43,21 @@ def test_admin_configs_page():
 def test_invoices_list_page():
     res = client.get("/invoices")
     assert res.status_code == 200
+
+    res_filtered = client.get("/invoices?property_id=1")
+    assert res_filtered.status_code == 200
+
+
+def test_template_filters():
+    from app.web.templates import format_vnd, format_pct
+    from decimal import Decimal
+
+    assert format_vnd(None) == "0"
+    assert format_vnd(1234567) == "1,234,567"
+    assert format_vnd(Decimal("1234567.89")) == "1,234,568"
+    assert format_vnd("invalid") == "invalid"
+
+    assert format_pct(None) == "0%"
+    assert format_pct(0.08) == "8%"
+    assert format_pct(Decimal("0.05")) == "5%"
+    assert format_pct("invalid") == "invalid"

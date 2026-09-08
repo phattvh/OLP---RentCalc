@@ -34,18 +34,18 @@
             <!-- Tóm tắt biểu giá điện & nước -->
             <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-md text-xs">
                 <div>
-                    <span class="font-bold text-gray-700">⚡ Biểu giá điện (VAT {{ "{:.0%}".format(cfg.electricity_config.vat_rate|float) }}):</span>
+                    <span class="font-bold text-gray-700">⚡ Biểu giá điện (VAT {{ cfg.electricity_config.vat_rate|pct }}):</span>
                     <ul class="mt-1 space-y-0.5 text-gray-600">
                         {% for t in cfg.electricity_config.tiers %}
-                        <li>{{ t.name }} ({{ t.base_quantity or 'trở lên' }} kWh): <strong class="font-mono">{{ "{:,.0f}".format(t.unit_price|float) }} đ</strong></li>
+                        <li>{{ t.name }} ({{ t.base_quantity or 'trở lên' }} kWh): <strong class="font-mono">{{ t.unit_price|vnd }} đ</strong></li>
                         {% endfor %}
                     </ul>
                 </div>
                 <div>
-                    <span class="font-bold text-gray-700">💧 Biểu giá nước (VAT {{ "{:.0%}".format(cfg.water_config.vat_rate|float) }} - Phí BVMT {{ "{:.0%}".format(cfg.water_config.env_fee_rate|float) }}):</span>
+                    <span class="font-bold text-gray-700">💧 Biểu giá nước (VAT {{ cfg.water_config.vat_rate|pct }} - Phí BVMT {{ cfg.water_config.env_fee_rate|pct }}):</span>
                     <ul class="mt-1 space-y-1 text-gray-600">
-                        <li>Theo khối: <strong class="font-mono">{{ "{:,.0f}".format(cfg.water_config.volume_unit_price|float) }} đ/m³</strong></li>
-                        <li>Khoán theo người: <strong class="font-mono">{{ "{:,.0f}".format(cfg.water_config.per_person_unit_price|float) }} đ/người/tháng</strong></li>
+                        <li>Theo khối: <strong class="font-mono">{{ cfg.water_config.volume_unit_price|vnd }} đ/m³</strong></li>
+                        <li>Khoán theo người: <strong class="font-mono">{{ cfg.water_config.per_person_unit_price|vnd }} đ/người/tháng</strong></li>
                         <li>Bậc áp khi không kê khai: <strong>Bậc {{ cfg.electricity_config.fallback_tier_number }}</strong></li>
                     </ul>
                 </div>

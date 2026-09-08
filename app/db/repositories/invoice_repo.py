@@ -46,6 +46,13 @@ class InvoiceRepository:
         stmt = stmt.order_by(Invoice.month.desc(), Room.name)
         return list(self.session.scalars(stmt).all())
 
+    def list_all(self, month: str | None = None) -> list[Invoice]:
+        stmt = select(Invoice)
+        if month:
+            stmt = stmt.where(Invoice.month == month)
+        stmt = stmt.order_by(Invoice.month.desc(), Invoice.id.desc())
+        return list(self.session.scalars(stmt).all())
+
     def create_or_update(self, invoice: Invoice) -> Invoice:
         existing = self.get_by_room_and_month(invoice.room_id, invoice.month)
         if existing:

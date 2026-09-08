@@ -50,21 +50,21 @@
                     <tr>
                         <td class="px-4 py-2 font-medium text-gray-800">{{ line.tier_name }}</td>
                         <td class="px-4 py-2 text-right font-mono">{{ line.consumption }}</td>
-                        <td class="px-4 py-2 text-right font-mono">{{ "{:,.0f}".format(line.unit_price|float) }}</td>
-                        <td class="px-4 py-2 text-right font-mono font-semibold">{{ "{:,.0f}".format(line.amount|float) }}</td>
+                        <td class="px-4 py-2 text-right font-mono">{{ line.unit_price|vnd }}</td>
+                        <td class="px-4 py-2 text-right font-mono font-semibold">{{ line.amount|vnd }}</td>
                     </tr>
                     {% endfor %}
                     <tr class="bg-gray-50 font-medium">
                         <td colspan="3" class="px-4 py-2 text-right text-gray-700">Cộng tiền điện trước thuế:</td>
-                        <td class="px-4 py-2 text-right font-mono">{{ "{:,.0f}".format(calc.electricity.subtotal|float) }} đ</td>
+                        <td class="px-4 py-2 text-right font-mono">{{ calc.electricity.subtotal|vnd }} đ</td>
                     </tr>
                     <tr class="bg-gray-50 text-xs text-gray-600">
-                        <td colspan="3" class="px-4 py-1 text-right">Thuế GTGT (VAT {{ "{:.0%}".format(calc.electricity.vat_rate|float) }}):</td>
-                        <td class="px-4 py-1 text-right font-mono">{{ "{:,.0f}".format(calc.electricity.vat|float) }} đ</td>
+                        <td colspan="3" class="px-4 py-1 text-right">Thuế GTGT (VAT {{ calc.electricity.vat_rate|pct }}):</td>
+                        <td class="px-4 py-1 text-right font-mono">{{ calc.electricity.vat|vnd }} đ</td>
                     </tr>
                     <tr class="bg-amber-50 font-bold text-amber-900 border-t-2 border-amber-300">
                         <td colspan="3" class="px-4 py-2 text-right">TỔNG TIỀN ĐIỆN ĐÃ LÀM TRÒN:</td>
-                        <td class="px-4 py-2 text-right font-mono text-base">{{ "{:,.0f}".format(calc.electricity.total_rounded|float) }} đ</td>
+                        <td class="px-4 py-2 text-right font-mono text-base">{{ calc.electricity.total_rounded|vnd }} đ</td>
                     </tr>
                 </tbody>
             </table>
@@ -96,23 +96,23 @@
                     </tr>
                     <tr>
                         <td class="py-2 text-gray-600">Đơn giá nước sạch:</td>
-                        <td class="py-2 text-right font-mono">{{ "{:,.0f}".format(calc.water.unit_price|float) }} đ/{% if calc.water.mode == 'volume' %}m³{% else %}người{% endif %}</td>
+                        <td class="py-2 text-right font-mono">{{ calc.water.unit_price|vnd }} đ/{% if calc.water.mode == 'volume' %}m³{% else %}người{% endif %}</td>
                     </tr>
                     <tr class="bg-gray-50">
                         <td class="py-2 text-gray-700 font-medium">Tiền nước trước thuế:</td>
-                        <td class="py-2 text-right font-mono font-medium">{{ "{:,.0f}".format(calc.water.water_before_tax|float) }} đ</td>
+                        <td class="py-2 text-right font-mono font-medium">{{ calc.water.water_before_tax|vnd }} đ</td>
                     </tr>
                     <tr class="text-xs text-gray-500">
                         <td class="py-1">Thuế GTGT (VAT 5%):</td>
-                        <td class="py-1 text-right font-mono">{{ "{:,.0f}".format(calc.water.vat|float) }} đ</td>
+                        <td class="py-1 text-right font-mono">{{ calc.water.vat|vnd }} đ</td>
                     </tr>
                     <tr class="text-xs text-gray-500">
                         <td class="py-1">Phí Bảo vệ môi trường nước thải (10%):</td>
-                        <td class="py-1 text-right font-mono">{{ "{:,.0f}".format(calc.water.env_fee|float) }} đ</td>
+                        <td class="py-1 text-right font-mono">{{ calc.water.env_fee|vnd }} đ</td>
                     </tr>
                     <tr class="bg-blue-50 font-bold text-blue-900 border-t-2 border-blue-300">
                         <td class="py-2">TỔNG TIỀN NƯỚC ĐÃ LÀM TRÒN:</td>
-                        <td class="py-2 text-right font-mono text-base">{{ "{:,.0f}".format(calc.water.total_rounded|float) }} đ</td>
+                        <td class="py-2 text-right font-mono text-base">{{ calc.water.total_rounded|vnd }} đ</td>
                     </tr>
                 </tbody>
             </table>
@@ -126,7 +126,7 @@
             <p class="text-xs text-indigo-300 mt-1">Bao gồm toàn bộ tiền điện bậc thang và tiền nước đã cộng đủ thuế phí.</p>
         </div>
         <div class="text-3xl font-black font-mono text-amber-300">
-            {{ "{:,.0f}".format(invoice.invoice_total_final) }} đ
+            {{ invoice.invoice_total_final|vnd }} đ
         </div>
     </div>
 
@@ -152,15 +152,15 @@
         {% if invoice.actual_collected is not none %}
         <div class="mt-4 p-5 rounded-lg border {% if invoice.difference > 0 %}bg-red-50 border-red-300 text-red-900{% else %}bg-green-50 border-green-300 text-green-900{% endif %}">
             <div class="flex justify-between items-center text-sm mb-2">
-                <span>Số tiền chủ nhà thu: <strong class="font-mono">{{ "{:,.0f}".format(invoice.actual_collected) }} đ</strong></span>
-                <span>Tiền theo quy định: <strong class="font-mono">{{ "{:,.0f}".format(invoice.invoice_total_final) }} đ</strong></span>
-                <span>Chênh lệch: <strong class="font-mono text-base {% if invoice.difference > 0 %}text-red-700{% else %}text-green-700{% endif %}">{% if invoice.difference > 0 %}+{% endif %}{{ "{:,.0f}".format(invoice.difference) }} đ</strong></span>
+                <span>Số tiền chủ nhà thu: <strong class="font-mono">{{ invoice.actual_collected|vnd }} đ</strong></span>
+                <span>Tiền theo quy định: <strong class="font-mono">{{ invoice.invoice_total_final|vnd }} đ</strong></span>
+                <span>Chênh lệch: <strong class="font-mono text-base {% if invoice.difference > 0 %}text-red-700{% else %}text-green-700{% endif %}">{% if invoice.difference > 0 %}+{% endif %}{{ invoice.difference|vnd }} đ</strong></span>
             </div>
 
             {% if invoice.difference > 0 %}
             <div class="mt-3 pt-3 border-t border-red-200 text-xs space-y-1">
                 <p class="font-bold text-red-800">⚠️ CẢNH BÁO VI PHẠM QUY ĐỊNH PHÁP LUẬT:</p>
-                <p>Chủ nhà trọ đang thu cao hơn quy chuẩn nhà nước <strong>{{ "{:,.0f}".format(invoice.difference) }} đ</strong>.</p>
+                <p>Chủ nhà trọ đang thu cao hơn quy chuẩn nhà nước <strong>{{ invoice.difference|vnd }} đ</strong>.</p>
                 <p class="text-red-700">Căn cứ <strong>Điều 31 Nghị định số 133/2026/NĐ-CP</strong>, hành vi thu tiền điện nước của người thuê nhà trọ cao hơn giá quy định có thể bị xử phạt hành chính từ <strong>20.000.000 đ đến 30.000.000 đ</strong> và buộc hoàn trả toàn bộ số tiền thu chênh lệch bất hợp pháp cho người thuê!</p>
             </div>
             {% else %}

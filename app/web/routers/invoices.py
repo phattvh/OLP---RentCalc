@@ -16,10 +16,25 @@ router = APIRouter(prefix="/invoices")
 
 
 @router.get("", response_class=HTMLResponse)
-def list_invoices(request: Request, db: Session = Depends(get_db)):
-    invoices = InvoiceRepository(db).list_by_property(property_id=1)
+def list_invoices(
+    request: Request,
+    property_id: int | None = None,
+    month: str | None = None,
+    db: Session = Depends(get_db),
+):
+    repo = InvoiceRepository(db)
+    if property_id is not None:
+        invoices = repo.list_by_property(property_id=property_id, month=month)
+    else:
+        invoices = repo.list_all(month=month)
     return templates.TemplateResponse(
-        request=request, name="invoices/list.html.j2", context={"invoices": invoices}
+        request=request,
+        name="invoices/list.html.j2",
+        context={
+            "invoices": invoices,
+            "selected_property_id": property_id,
+            "selected_month": month,
+        },
     )
 
 

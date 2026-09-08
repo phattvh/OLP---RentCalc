@@ -30,12 +30,12 @@
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 font-mono font-medium text-indigo-600">#{{ inv.id }} - {{ inv.month }}</td>
                         <td class="px-6 py-4 font-semibold text-gray-900">{{ inv.room.name }}</td>
-                        <td class="px-6 py-4 text-right font-mono">{{ "{:,.0f}".format(inv.electricity_total_final) }} đ</td>
-                        <td class="px-6 py-4 text-right font-mono">{{ "{:,.0f}".format(inv.water_total_final) }} đ</td>
-                        <td class="px-6 py-4 text-right font-mono font-bold text-indigo-700">{{ "{:,.0f}".format(inv.invoice_total_final) }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono">{{ inv.electricity_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono">{{ inv.water_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono font-bold text-indigo-700">{{ inv.invoice_total_final|vnd }} đ</td>
                         <td class="px-6 py-4 text-right font-mono">
                             {% if inv.actual_collected %}
-                                {{ "{:,.0f}".format(inv.actual_collected) }} đ
+                                {{ inv.actual_collected|vnd }} đ
                             {% else %}
                                 <span class="text-gray-400">Chưa nhập</span>
                             {% endif %}
@@ -43,7 +43,7 @@
                         <td class="px-6 py-4 text-center">
                             {% if inv.difference is not none %}
                                 {% if inv.difference > 0 %}
-                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-bold">Thu vượt +{{ "{:,.0f}".format(inv.difference) }} đ</span>
+                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-bold">Thu vượt +{{ inv.difference|vnd }} đ</span>
                                 {% else %}
                                     <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-bold">Đúng luật</span>
                                 {% endif %}
