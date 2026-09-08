@@ -86,7 +86,7 @@ Ví dụ: 151.097,4 → 151.097 | 701.524,8 → 701.525 | x,5 → lên.
 chênh lệch = số thực thu − tổng tiền theo quy định.
 Dương: người thuê trả thừa. Bằng 0: khớp. Âm: thu thấp hơn quy định.
 
-## 9. Bảng nghiệm thu chính thức (7 ca, khớp từng đồng)
+## 9. Bảng nghiệm thu chính thức
 
 | Mã    | Đầu vào                   | Breakdown (sản lượng × đơn giá)        | Trước thuế | Thuế                  | Kết quả                     |
 | ----- | ------------------------- | -------------------------------------- | ---------- | --------------------- | --------------------------- |

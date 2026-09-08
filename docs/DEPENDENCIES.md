@@ -31,4 +31,6 @@ Tất cả các thư viện dưới đây đã được rà soát giấy phép t
 
 Để trích xuất toàn bộ danh mục giấy phép kể cả các thư viện phụ thuộc bắc cầu (transitive dependencies):
 
+```bash
 pip install pip-licenses && pip-licenses --format=markdown
+```

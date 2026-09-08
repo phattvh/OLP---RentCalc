@@ -1,7 +1,7 @@
-# RentCalc — Minh Bạch Hóa Chi Phí Dịch Vụ Thiết Yếu Nhà Trọ
+# RentCalc - Minh Bạch Hóa Chi Phí Dịch Vụ Thiết Yếu Nhà Trọ
 
-Dự án tham dự Olympic Tin học Sinh viên Việt Nam 2026 — Khối Phần mềm nguồn mở.
-Tác giả: Phat Tran Vu Hoa — Giấy phép: MIT License.
+Tác giả: Phat Tran Vu Hoa
+Giấy phép: MIT License.
 
 ---
 
