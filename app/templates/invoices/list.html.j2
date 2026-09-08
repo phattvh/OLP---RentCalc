@@ -1,0 +1,68 @@
+{% extends "base.html.j2" %}
+{% block title %}Danh sách hóa đơn - RentCalc{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center border-b pb-5 border-gray-200">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Danh sách hóa đơn tiền phòng</h1>
+            <p class="text-sm text-gray-500">Xem và quản lý các hóa đơn đã phát hành và đối chiếu thực thu.</p>
+        </div>
+    </div>
+
+    <div class="bg-white shadow rounded-lg border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-medium text-gray-500">Mã / Kỳ tháng</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-500">Phòng</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500">Tiền điện (VNĐ)</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500">Tiền nước (VNĐ)</th>
+                        <th class="px-6 py-3 text-right font-bold text-gray-900">Tổng quy định (VNĐ)</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500">Thực thu</th>
+                        <th class="px-6 py-3 text-center font-medium text-gray-500">Trạng thái</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for inv in invoices %}
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 font-mono font-medium text-indigo-600">#{{ inv.id }} - {{ inv.month }}</td>
+                        <td class="px-6 py-4 font-semibold text-gray-900">{{ inv.room.name }}</td>
+                        <td class="px-6 py-4 text-right font-mono">{{ "{:,.0f}".format(inv.electricity_total_final) }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono">{{ "{:,.0f}".format(inv.water_total_final) }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono font-bold text-indigo-700">{{ "{:,.0f}".format(inv.invoice_total_final) }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono">
+                            {% if inv.actual_collected %}
+                                {{ "{:,.0f}".format(inv.actual_collected) }} đ
+                            {% else %}
+                                <span class="text-gray-400">Chưa nhập</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            {% if inv.difference is not none %}
+                                {% if inv.difference > 0 %}
+                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-bold">Thu vượt +{{ "{:,.0f}".format(inv.difference) }} đ</span>
+                                {% else %}
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-bold">Đúng luật</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">Chưa đối chiếu</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="/invoices/{{ inv.id }}" class="text-indigo-600 hover:text-indigo-900 font-semibold">Xem bóc tách &rarr;</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="px-6 py-8 text-center text-gray-400">Chưa có hóa đơn nào được phát hành.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
