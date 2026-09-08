@@ -80,7 +80,7 @@ class Room(Base):
     )
 
     property: Mapped["Property"] = relationship(
-        back_populates="rooms", default=None, init=False
+        back_populates="rooms", init=False
     )
     meter_readings: Mapped[list["MeterReading"]] = relationship(
         back_populates="room",
@@ -119,7 +119,7 @@ class MeterReading(Base):
     )
 
     room: Mapped["Room"] = relationship(
-        back_populates="meter_readings", default=None, init=False
+        back_populates="meter_readings", init=False
     )
 
 
@@ -186,8 +186,8 @@ class Invoice(Base):
     )
 
     room: Mapped["Room"] = relationship(
-        back_populates="invoices", default=None, init=False
+        back_populates="invoices", init=False
     )
     tariff_config: Mapped["TariffConfig"] = relationship(
-        back_populates="invoices", default=None, init=False
+        back_populates="invoices", init=False
     )
