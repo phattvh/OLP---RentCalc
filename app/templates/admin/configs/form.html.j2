@@ -1,0 +1,102 @@
+{% extends "base.html.j2" %}
+{% block title %}Tạo cấu hình biểu giá mới - RentCalc{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow border border-gray-200">
+    <div class="mb-6 border-b pb-4">
+        <a href="/admin/configs" class="text-xs text-gray-500 hover:underline">&larr; Quay lại danh sách cấu hình</a>
+        <h1 class="text-2xl font-bold text-gray-900 mt-1">Cấu hình biểu giá mới</h1>
+        <p class="text-xs text-gray-500">Khi lưu, biểu giá mới này sẽ tự động được kích hoạt áp dụng cho toàn bộ các hóa đơn tính từ thời điểm này.</p>
+    </div>
+
+    <form action="/admin/configs" method="POST" class="space-y-6">
+        <!-- Thông tin chung -->
+        <div class="space-y-4">
+            <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-wide">1. Thông tin chung & Căn cứ pháp lý</h3>
+            <div>
+                <label class="block text-xs font-semibold text-gray-700">Tên cấu hình <span class="text-red-500">*</span></label>
+                <input type="text" name="name" required value="Biểu giá chính thức 2026" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-700">Căn cứ văn bản pháp luật</label>
+                <input type="text" name="description" value="Căn cứ QĐ 1279/QĐ-BCT, TT 60/2025/TT-BCT & NQ 204/2025/QH15" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm">
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700">Thuế VAT điện (8% = 0.08)</label>
+                    <input type="text" name="vat_rate" value="0.08" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700">Số người / 1 định mức</label>
+                    <input type="text" name="people_per_quota" value="4" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700">Bậc áp khi không kê khai</label>
+                    <input type="number" name="fallback_tier_number" value="3" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+            </div>
+        </div>
+
+        <!-- 6 bậc điện -->
+        <div class="space-y-4 pt-4 border-t border-gray-200">
+            <h3 class="text-sm font-bold text-amber-600 uppercase tracking-wide">2. Đơn giá 6 bậc điện sinh hoạt (VNĐ/kWh)</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs text-gray-600">Bậc 1 (0–50 kWh):</label>
+                    <input type="text" name="t1_price" value="1984" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600">Bậc 2 (51–100 kWh):</label>
+                    <input type="text" name="t2_price" value="2050" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600">Bậc 3 (101–200 kWh):</label>
+                    <input type="text" name="t3_price" value="2380" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600">Bậc 4 (201–300 kWh):</label>
+                    <input type="text" name="t4_price" value="2998" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600">Bậc 5 (301–400 kWh):</label>
+                    <input type="text" name="t5_price" value="3350" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600">Bậc 6 (Từ 401 kWh):</label>
+                    <input type="text" name="t6_price" value="3460" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tiền nước -->
+        <div class="space-y-4 pt-4 border-t border-gray-200">
+            <h3 class="text-sm font-bold text-blue-600 uppercase tracking-wide">3. Đơn giá & Thuế phí nước sinh hoạt</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs text-gray-600">Giá nước theo khối (VNĐ/m³):</label>
+                    <input type="text" name="water_volume_price" value="8500" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600">Giá nước khoán (VNĐ/người/tháng):</label>
+                    <input type="text" name="water_person_price" value="80000" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600">Thuế VAT nước (5% = 0.05):</label>
+                    <input type="text" name="water_vat" value="0.05" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600">Phí BVMT nước thải (10% = 0.10):</label>
+                    <input type="text" name="water_env" value="0.10" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono">
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-4 flex justify-end space-x-3 border-t border-gray-200">
+            <a href="/admin/configs" class="px-4 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-50">Hủy</a>
+            <button type="submit" class="px-5 py-2 bg-indigo-600 text-white text-sm font-semibold rounded hover:bg-indigo-700 shadow-sm">
+                Lưu & Kích hoạt biểu giá
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

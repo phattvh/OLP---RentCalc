@@ -1,0 +1,61 @@
+{% extends "base.html.j2" %}
+{% block title %}Cấu hình biểu giá nhà nước - RentCalc{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center border-b pb-5 border-gray-200">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Quản lý biểu giá điện & nước</h1>
+            <p class="text-sm text-gray-500">Kiểm soát các phiên bản biểu giá theo các văn bản quy phạm pháp luật.</p>
+        </div>
+        <a href="/admin/configs/new" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition">
+            + Tạo biểu giá mới
+        </a>
+    </div>
+
+    <div class="space-y-4">
+        {% for cfg in configs %}
+        <div class="bg-white shadow rounded-lg border {% if cfg.is_active %}border-indigo-500 ring-2 ring-indigo-500 ring-opacity-20{% else %}border-gray-200{% endif %} p-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="flex items-center space-x-3">
+                        <h3 class="text-lg font-bold text-gray-900">{{ cfg.name }}</h3>
+                        {% if cfg.is_active %}
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">✓ Đang áp dụng</span>
+                        {% else %}
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">Lịch sử cũ</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Căn cứ pháp lý: {{ cfg.description or "Không có ghi chú" }}</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Thời gian áp dụng: {{ cfg.effective_from.strftime('%d/%m/%Y %H:%M') }}</p>
+                </div>
+            </div>
+
+            <!-- Tóm tắt biểu giá điện & nước -->
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-md text-xs">
+                <div>
+                    <span class="font-bold text-gray-700">⚡ Biểu giá điện (VAT {{ "{:.0%}".format(cfg.electricity_config.vat_rate|float) }}):</span>
+                    <ul class="mt-1 space-y-0.5 text-gray-600">
+                        {% for t in cfg.electricity_config.tiers %}
+                        <li>{{ t.name }} ({{ t.base_quantity or 'trở lên' }} kWh): <strong class="font-mono">{{ "{:,.0f}".format(t.unit_price|float) }} đ</strong></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <span class="font-bold text-gray-700">💧 Biểu giá nước (VAT {{ "{:.0%}".format(cfg.water_config.vat_rate|float) }} - Phí BVMT {{ "{:.0%}".format(cfg.water_config.env_fee_rate|float) }}):</span>
+                    <ul class="mt-1 space-y-1 text-gray-600">
+                        <li>Theo khối: <strong class="font-mono">{{ "{:,.0f}".format(cfg.water_config.volume_unit_price|float) }} đ/m³</strong></li>
+                        <li>Khoán theo người: <strong class="font-mono">{{ "{:,.0f}".format(cfg.water_config.per_person_unit_price|float) }} đ/người/tháng</strong></li>
+                        <li>Bậc áp khi không kê khai: <strong>Bậc {{ cfg.electricity_config.fallback_tier_number }}</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="bg-white p-12 text-center rounded-lg border border-dashed border-gray-300 text-gray-500">
+            Chưa có cấu hình biểu giá nào. Hãy bấm nút <strong>Tạo biểu giá mới</strong> để thiết lập.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
