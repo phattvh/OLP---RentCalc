@@ -4,7 +4,7 @@
 
 from sqlalchemy.orm import Session
 
-from app.core.meter import calculate_meter_consumption
+from app.core.meter import calculate_consumption
 from app.db.models import MeterReading
 from app.db.repositories.meter_reading_repo import MeterReadingRepository
 from app.services.config_service import ConfigService
@@ -31,7 +31,7 @@ class MeterService:
         core_config, _ = self.config_service.get_active_config()
         max_val = core_config.meter.max_value
 
-        consumption = calculate_meter_consumption(
+        consumption = calculate_consumption(
             start=start_reading,
             end=end_reading,
             max_value=max_val,

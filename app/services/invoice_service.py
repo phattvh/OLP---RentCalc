@@ -5,7 +5,7 @@
 from decimal import Decimal
 from sqlalchemy.orm import Session
 
-from app.core.comparison import calculate_comparison
+from app.core.comparison import compare_with_actual
 from app.core.decimal_utils import to_decimal
 from app.db.models import Invoice
 from app.db.repositories.invoice_repo import InvoiceRepository
@@ -35,7 +35,7 @@ class InvoiceService:
             raise ValueError(f"Không tìm thấy hóa đơn ID {invoice_id}")
 
         actual = to_decimal(actual_collected_str)
-        comparison = calculate_comparison(
+        comparison = compare_with_actual(
             actual_collected=actual,
             regulated_total=invoice.invoice_total_final,
         )
