@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
-"""Service tạo và kiểm tra token chia sẻ hóa đơn công khai."""
+"""Dịch vụ chia sẻ hóa đơn công khai qua share_token."""
 
 import secrets
 from sqlalchemy.orm import Session
