@@ -61,3 +61,26 @@ def test_template_filters():
     assert format_pct(0.08) == "8%"
     assert format_pct(Decimal("0.05")) == "5%"
     assert format_pct("invalid") == "invalid"
+
+def test_rollover_meter_reading_via_ui():
+    """Kiểm thử gửi dữ liệu công tơ quay vòng (end < start) qua web."""
+    from app.db.session import SessionLocal
+    from app.db.models import Room
+    db = SessionLocal()
+    room = db.query(Room).first()
+    db.close()
+    assert room is not None
+
+    # Đầu kỳ 99850, cuối kỳ 120 -> sản lượng qua vòng = (99999 + 1) - 99850 + 120 = 270
+    response = client.post(
+        f"/rooms/{room.id}/readings",
+        data={
+            "month": "2026-10",
+            "meter_type": "electricity",
+            "start_reading": "99850",
+            "end_reading": "120",
+            "notes": "Kiểm thử công tơ quay vòng",
+        },
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
