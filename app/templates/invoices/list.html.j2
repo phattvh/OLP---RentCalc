@@ -50,8 +50,15 @@
                                 <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">Chưa đối chiếu</span>
                             {% endif %}
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="/invoices/{{ inv.id }}" class="text-indigo-600 hover:text-indigo-900 font-semibold">Chi tiết &rarr;</a>
+                        <td class="px-6 py-4 text-right whitespace-nowrap">
+                            <div class="action-btn-group">
+                                <a href="/invoices/{{ inv.id }}" class="mini-btn mini-btn-primary">
+                                    Chi tiết
+                                </a>
+                                <a href="/invoices/{{ inv.id }}/pdf" target="_blank" class="mini-btn mini-btn-secondary">
+                                    📄 PDF
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     {% else %}

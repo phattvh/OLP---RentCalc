@@ -3,9 +3,11 @@
 """Router trang chủ Dashboard hiển thị số liệu thống kê tổng quan."""
 
 from fastapi import APIRouter, Depends, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
+from app.auth import get_current_user_optional
+from app.db.models import User
 from app.db.repositories.invoice_repo import InvoiceRepository
 from app.db.repositories.property_repo import PropertyRepository
 from app.db.repositories.tariff_config_repo import TariffConfigRepository
@@ -16,7 +18,13 @@ router = APIRouter()
 
 
 @router.get("/", response_class=HTMLResponse)
-def index(request: Request, db: Session = Depends(get_db)):
+def index(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User | None = Depends(get_current_user_optional),
+):
+    if user and user.role == "tenant":
+        return RedirectResponse("/my-invoices", status_code=303)
     prop_repo = PropertyRepository(db)
     config_repo = TariffConfigRepository(db)
     inv_repo = InvoiceRepository(db)

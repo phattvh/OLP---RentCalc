@@ -73,12 +73,17 @@ def invoice_detail(invoice_id: int, request: Request, db: Session = Depends(get_
     
 @router.get("/{invoice_id}/pdf")
 def export_invoice_pdf(
-    invoice_id: int,
+    invoice_id: str,
     request: Request,
     db: Session = Depends(get_db),
 ):
-    """Xuất hóa đơn tiền phòng ra file PDF chính thức."""
-    invoice = InvoiceRepository(db).get(invoice_id)
+    """Xuất hóa đơn tiền phòng ra file PDF chính thức (hỗ trợ cả ID số và share token)."""
+    repo = InvoiceRepository(db)
+    if invoice_id.isdigit():
+        invoice = repo.get(int(invoice_id))
+    else:
+        invoice = repo.get_by_share_token(invoice_id)
+
     if not invoice:
         raise HTTPException(status_code=404, detail="Không tìm thấy hóa đơn")
 

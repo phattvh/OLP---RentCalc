@@ -213,6 +213,12 @@ def test_pdf_export_and_public_share():
     assert res_owner_pdf.headers["content-type"] == "application/pdf"
     assert res_owner_pdf.content.startswith(b"%PDF")
 
+    # 6. Tải file PDF qua URL /invoices/{token}/pdf
+    res_token_pdf = client.get(f"/invoices/{token}/pdf")
+    assert res_token_pdf.status_code == 200
+    assert res_token_pdf.headers["content-type"] == "application/pdf"
+    assert res_token_pdf.content.startswith(b"%PDF")
+
 
 
 
@@ -248,4 +254,10 @@ def test_navbar_auth_state():
     assert res_tenant.status_code == 200
     assert "Khách" in res_tenant.text
     assert "Hóa đơn của tôi" in res_tenant.text
-    assert "Đăng xuất" in res_tenant.text
+    assert "Đăng xuất" in res_tenant.text
+    assert "Tổng quan" not in res_tenant.text
+
+    # 4. Người thuê vào trang chủ / -> tự động redirect về /my-invoices
+    res_tenant_root = client.get("/", cookies={"user_id": str(tenant.id)}, follow_redirects=False)
+    assert res_tenant_root.status_code == 303
+    assert res_tenant_root.headers["location"] == "/my-invoices"
