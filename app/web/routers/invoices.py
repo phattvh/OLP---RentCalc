@@ -96,5 +96,5 @@ def export_invoice_pdf(
     return Response(
         content=pdf_bytes,
         media_type="application/pdf",
-        headers={"Content-Disposition": f'attachment; filename="hoa-don-{invoice.month}-phong-{invoice.room.name}.pdf"'},
+        headers={"Content-Disposition": f'attachment; filename="hoa-don-{invoice.month}-phong-{invoice.room_id}.pdf"'},
     )

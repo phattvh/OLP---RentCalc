@@ -94,10 +94,10 @@
         </tr>
         <tr>
             <td><strong>Địa chỉ:</strong> {{ invoice.room.property.address or 'Theo hợp đồng thuê' }}</td>
-            <td><strong>Số nhân khẩu đăng ký:</strong> {{ snap.water.people_count }} người</td>
+            <td><strong>Số nhân khẩu đăng ký:</strong> {{ snap.people_count }} người</td>
         </tr>
         <tr>
-            <td><strong>Số định mức điện áp dụng:</strong> {{ snap.electricity.quota_count }} định mức</td>
+            <td><strong>Số định mức điện áp dụng:</strong> {{ calc.electricity.quota or 1 }} định mức</td>
             <td><strong>Mã hóa đơn:</strong> #{{ invoice.id }}</td>
         </tr>
     </table>
