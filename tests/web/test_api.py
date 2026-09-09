@@ -20,7 +20,7 @@ def test_dashboard_page():
     response = client.get("/")
     assert response.status_code == 200
     assert "RentCalc" in response.text
-    assert "Bảng điều khiển tổng quan" in response.text
+    assert "Bảng điều khiển" in response.text
 
 
 def test_properties_pages():

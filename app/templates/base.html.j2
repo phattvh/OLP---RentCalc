@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}RentCalc - Minh Bạch Chi Phí Dịch Vụ Nhà Trọ{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/app.css">
+    <link rel="stylesheet" href="/static/css/app.css?v=0.3.0">
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col text-gray-900 antialiased font-sans">
     <!-- Header tối ưu co giãn cho cả Mobile & Desktop -->
     <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:h-16 py-3 sm:py-0 items-center space-y-2 sm:space-y-0">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 sm:h-16">
                 <!-- Logo & Version badge -->
-                <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
+                <div class="flex items-center space-x-2.5">
                     <a href="/" class="flex items-center space-x-1.5 font-black text-2xl tracking-tight hover:text-indigo-100 transition">
                         <span class="text-white">Rent</span><span class="text-indigo-200">Calc</span>
                     </a>
-                    <span class="px-2.5 py-0.5 text-xs bg-indigo-800/80 text-indigo-200 rounded-full font-mono font-semibold border border-indigo-600">v0.3.0</span>
+                    <span class="px-2.5 py-0.5 text-xs bg-indigo-800 text-indigo-200 rounded-full font-mono font-semibold border border-indigo-600">v0.3.0</span>
                 </div>
 
-                <!-- Navigation cuộn ngang mượt mà trên màn hình nhỏ -->
-                <nav class="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm font-medium overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+                <!-- Navigation đẩy hoàn toàn qua bên phải -->
+                <nav class="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm font-medium mt-2 sm:mt-0 sm:ml-auto overflow-x-auto pb-1 sm:pb-0">
                     <a href="/" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Tổng quan</a>
                     <a href="/properties" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Cơ sở & Phòng</a>
                     <a href="/invoices" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Hóa đơn</a>
@@ -42,52 +42,59 @@
     <!-- FOOTER CHUYÊN NGHIỆP CHUẨN OLP PMNM 2026 -->
     <footer class="bg-white border-t border-gray-200 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
-                <!-- Cột 1: Thông tin hệ thống -->
-                <div class="space-y-3">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 text-sm items-start">
+                <!-- Cột 1: Thông tin hệ thống (chiếm 4 cột) -->
+                <div class="space-y-2.5 md:col-span-4">
                     <div class="flex items-center space-x-2">
-                        <span class="font-black text-lg text-indigo-700">RentCalc</span>
+                        <span class="font-black text-xl text-indigo-700">RentCalc</span>
                         <span class="px-2 py-0.5 text-xs bg-indigo-100 text-indigo-800 rounded font-mono font-semibold">v0.3.0</span>
                     </div>
                     <p class="text-gray-500 text-xs leading-relaxed">
-                        Hệ thống phần mềm nguồn mở quản trị, tính toán và minh bạch hóa chi phí điện, nước sinh hoạt phòng trọ theo chuẩn quy định Nhà nước.
-                    </p>
-                    <p class="text-xs text-gray-400 font-mono">
-                        Giấy phép mã nguồn mở MIT &copy; 2026 Phat Tran Vu Hoa.
+                        Hệ thống quản trị, tính toán và chi phí điện, nước sinh hoạt phòng trọ theo quy định Nhà nước.
                     </p>
                 </div>
 
-                <!-- Cột 2: Căn cứ pháp lý áp dụng -->
-                <div class="space-y-2">
+                <!-- Cột 2: Căn cứ pháp lý áp dụng (chiếm 5 cột rộng rãi) -->
+                <div class="space-y-2 md:col-span-5">
                     <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">Căn cứ pháp lý áp dụng</h3>
-                    <ul class="text-xs text-gray-600 space-y-1.5">
-                        <li class="flex items-start">
-                            <span class="text-indigo-500 mr-1.5">•</span>
-                            <span><strong>QĐ 2741/QĐ-BCT</strong> &amp; <strong>QĐ 1279/QĐ-BCT</strong>: Biểu giá bán lẻ điện bậc thang sinh hoạt.</span>
+                    <ul class="text-xs text-gray-600 space-y-2 pl-4 list-disc marker:text-indigo-500">
+                        <li class="leading-relaxed">
+                            <strong>QĐ 2741/QĐ-BCT &amp; QĐ 1279/QĐ-BCT</strong>: Biểu giá bán lẻ điện bậc thang sinh hoạt.
                         </li>
-                        <li class="flex items-start">
-                            <span class="text-indigo-500 mr-1.5">•</span>
-                            <span><strong>TT 60/2025/TT-BCT</strong>: Quy chuẩn tính định mức điện cho người thuê trọ.</span>
+                        <li class="leading-relaxed">
+                            <strong>TT 60/2025/TT-BCT</strong>: Quy chuẩn tính định mức điện cho người thuê trọ.
                         </li>
-                        <li class="flex items-start">
-                            <span class="text-indigo-500 mr-1.5">•</span>
-                            <span><strong>NĐ 133/2026/NĐ-CP (Điều 31)</strong>: Chế tài xử phạt vi phạm thu tiền điện nước vượt trần.</span>
+                        <li class="leading-relaxed">
+                            <strong>NĐ 133/2026/NĐ-CP (Điều 31)</strong>: Chế tài xử phạt vi phạm thu tiền điện nước vượt trần.
                         </li>
                     </ul>
                 </div>
 
-                <!-- Cột 3: Liên kết & Dự án OLP -->
-                <div class="space-y-2">
+                <!-- Cột 3: Liên kết & Dự án OLP (chiếm 3 cột, đẩy sang phải) -->
+                <div class="space-y-2 md:col-span-3 md:text-right">
                     <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">Olympic Tin Học Sinh Viên 2026</h3>
-                    <p class="text-xs text-gray-600">
+                    <p class="text-xs text-gray-500">
                         Khối Phần mềm Nguồn mở (PMNM) — Đề tài RentCalc.
                     </p>
-                    <div class="pt-2 flex flex-wrap gap-2 text-xs">
-                        <a href="/invoices" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition font-medium">Hóa đơn</a>
-                        <a href="/admin/configs" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition font-medium">Biểu giá Nhà nước</a>
-                        <a href="/login" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded transition font-medium">Đăng nhập</a>
-                    </div>
+                    <ul class="pt-1.5 space-y-1.5 text-xs">
+                        <li>
+                            <a href="/invoices" class="text-indigo-600 hover:text-indigo-800 hover:underline font-medium">&bull; Hóa đơn tiền phòng</a>
+                        </li>
+                        <li>
+                            <a href="/admin/configs" class="text-indigo-600 hover:text-indigo-800 hover:underline font-medium">&bull; Biểu giá Nhà nước</a>
+                        </li>
+                        <li>
+                            <a href="/login" class="text-indigo-600 hover:text-indigo-800 hover:underline font-medium">&bull; Đăng nhập hệ thống</a>
+                        </li>
+                    </ul>
                 </div>
+            </div>
+
+            <!-- Dòng cuối cùng: Bản quyền nổi bật, xích xuống riêng biệt -->
+            <div class="mt-8 pt-5 border-t border-gray-100 text-center">
+                <p class="text-xs font-medium text-gray-500">
+                    Giấy phép mã nguồn mở <span class="text-indigo-600 font-bold">MIT</span> &copy; 2026 <strong class="text-gray-800">Phat Tran Vu Hoa</strong>. Tất cả quyền được bảo lưu.
+                </p>
             </div>
         </div>
     </footer>
