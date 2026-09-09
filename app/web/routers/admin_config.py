@@ -36,10 +36,10 @@ async def create_config(
     db: Session = Depends(get_db),
 ):
     form_data = await request.form()
-    name = str(form_data.get("name", "")).strip()
+    name = str(form_data.get("name", "")).strip() or "Biểu giá tùy chỉnh"
     description = form_data.get("description")
     if description is not None:
-        description = str(description).strip()
+        description = str(description).strip() or None
 
     vat_rate = str(form_data.get("vat_rate", "0.08")).strip()
     people_per_quota = str(form_data.get("people_per_quota", "4")).strip()

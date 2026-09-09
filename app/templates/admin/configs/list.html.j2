@@ -18,7 +18,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <div class="flex items-center space-x-3">
-                        <h3 class="text-lg font-bold text-gray-900">{{ cfg.name }}</h3>
+                        <h3 class="text-lg font-bold text-gray-900">{{ cfg.name or "Biểu giá tùy chỉnh" }}</h3>
                         {% if cfg.is_active %}
                         <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">✓ Đang áp dụng</span>
                         {% else %}

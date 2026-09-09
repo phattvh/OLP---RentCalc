@@ -14,7 +14,7 @@ from app.auth import (
     verify_password,
     verify_signed_user_id,
 )
-from app.db.models import Room, User
+from app.db.models import Invoice, Property, Room, TariffConfig, User
 from app.db.session import SessionLocal
 from app.main import app
 from app.services.calculation_service import CalculationService
@@ -73,37 +73,32 @@ def test_create_custom_five_tier_config():
     cookies = get_auth_cookies("owner")
     res = client.post(
         "/admin/configs",
-        data=[
-            ("name", "Biểu giá 5 bậc thử nghiệm"),
-            ("description", "Dự thảo biểu giá điện 5 bậc"),
-            ("vat_rate", "0.08"),
-            ("people_per_quota", "4"),
-            ("fallback_tier_number", "3"),
-            ("tier_qty", "100"),
-            ("tier_price", "1806"),
-            ("tier_name", "Bậc 1"),
-            ("tier_qty", "100"),
-            ("tier_price", "2167"),
-            ("tier_name", "Bậc 2"),
-            ("tier_qty", "200"),
-            ("tier_price", "2729"),
-            ("tier_name", "Bậc 3"),
-            ("tier_qty", "300"),
-            ("tier_price", "3250"),
-            ("tier_name", "Bậc 4"),
-            ("tier_qty", ""),
-            ("tier_price", "3611"),
-            ("tier_name", "Bậc 5"),
-            ("water_volume_price", "9000"),
-            ("water_person_price", "85000"),
-            ("water_vat", "0.05"),
-            ("water_env", "0.10"),
-            ("meter_max", "999999"),
-        ],
+        data={
+            "name": "Biểu giá 5 bậc thử nghiệm",
+            "description": "Dự thảo biểu giá điện 5 bậc",
+            "vat_rate": "0.08",
+            "people_per_quota": "4",
+            "fallback_tier_number": "3",
+            "tier_qty": ["100", "100", "200", "300", ""],
+            "tier_price": ["1806", "2167", "2729", "3250", "3611"],
+            "tier_name": ["Bậc 1", "Bậc 2", "Bậc 3", "Bậc 4", "Bậc 5"],
+            "water_volume_price": "9000",
+            "water_person_price": "85000",
+            "water_vat": "0.05",
+            "water_env": "0.10",
+            "meter_max": "999999",
+        },
         cookies=cookies,
         follow_redirects=False,
     )
     assert res.status_code == 303
+
+    # Dọn dẹp dữ liệu test: khôi phục biểu giá chuẩn chính thức là active
+    db = SessionLocal()
+    db.query(TariffConfig).filter(TariffConfig.name.like("%chính thức%")).update({"is_active": True})
+    db.query(TariffConfig).filter(TariffConfig.name == "Biểu giá 5 bậc thử nghiệm").delete()
+    db.commit()
+    db.close()
 
 
 def test_invoices_list_page():
@@ -371,4 +366,10 @@ def test_invoice_snapshot_immutability():
     assert inv2.id == inv1_id
     assert inv2.invoice_total_final == inv1_total
     assert inv2.tariff_config_id == inv1_tariff_id
+
+    # Dọn dẹp hóa đơn test để không làm rác DB của hệ thống
+    inv_del = db.query(Invoice).filter_by(id=inv1_id).first()
+    if inv_del:
+        db.delete(inv_del)
+        db.commit()
     db.close()
