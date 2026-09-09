@@ -1,7 +1,7 @@
 # RentCalc - Minh Bạch Hóa Chi Phí Dịch Vụ Thiết Yếu Nhà Trọ
 
-![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)
-![Tests](https://img.shields.io/badge/tests-49%2F49%20passed-success.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Tests](https://img.shields.io/badge/tests-51%2F51%20passed-success.svg)
 ![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
@@ -26,17 +26,15 @@
 ## Trạng thái phát triển các giai đoạn
 
 - ✅ **Task 01: Core Calculation Engine (`v0.1.0`)** — Hoàn thành (33/33 tests pass, 96% coverage).
-- ✅ **Task 02: Database + Web Layer + CRUD (`v0.2.0`)** — Hoàn thành:
-  - Database: PostgreSQL 16 + SQLAlchemy 2.0 + Alembic migrations.
-  - Web: FastAPI + Jinja2 Templates + Tailwind CSS + HTMX.
-  - Nghiệp vụ: CRUD cơ sở, phòng trọ, công tơ rollover, bóc tách hóa đơn lũy tiến, đối chiếu thực thu.
-- ✅ **Task 03: Advanced Features + UI Polish + Public Page (`v0.3.0`)** — Hoàn thành:
-  - Chia sẻ hóa đơn công khai bảo mật (`/share/{token}`) không cần đăng nhập.
-  - Xuất hóa đơn PDF chuẩn in ấn chính thức hỗ trợ 100% tiếng Việt Unicode.
-  - Xác thực & phân quyền vai trò Chủ nhà (`owner`) và Khách thuê (`tenant`).
-  - Cảnh báo trực quan công tơ quay vòng (Rollover Warning).
-  - Bảng điều khiển quản trị (Dashboard) với cảnh báo pháp lý thu vượt trần.
-  - Kiểm thử tự động: **49/49 tests pass (100%)**, Coverage **85%**.
+- ✅ **Task 02: Database + Web Layer + CRUD (`v0.2.0`)** — Hoàn thành (PostgreSQL, FastAPI, CRUD, Snapshot).
+- ✅ **Task 03: Advanced Features + UI Polish + Public Page (`v0.3.0`)** — Hoàn thành (Public share, Unicode PDF, RBAC Auth, Rollover warning, Dashboard alert).
+- ✅ **Task 04: Final Polish + Presentation + Production Release (`v1.0.0`)** — Hoàn thành:
+  - Khả năng tiếp cận: Chuẩn ARIA (`aria-label`, `role="alert"`), skip-link hỗ trợ đọc màn hình.
+  - Tối ưu hiệu năng: Minify CSS Tailwind, endpoint kiểm tra sức khỏe `/health`.
+  - Xử lý lỗi giao diện tùy biến: Trang 404 & 500, trạng thái xác thực động và nút Đăng xuất trên Navbar.
+  - Sẵn sàng triển khai Production: `docker-compose.prod.yml`, `nginx.conf`, hướng dẫn [docs/DEPLOY.md](docs/DEPLOY.md).
+  - Tài liệu bảo vệ đề tài: Bộ 15 slide [docs/PRESENTATION.md](docs/PRESENTATION.md) và kịch bản diễn tập 15 phút chi tiết từng giây [docs/REHEARSAL.md](docs/REHEARSAL.md).
+  - Kiểm thử tự động: **51/51 tests pass (100%)**, Coverage **85%**.
 
 ---
 
@@ -56,13 +54,17 @@ Truy cập: **http://localhost:8000**
 
 - Tài khoản Chủ nhà: `owner` / `owner123`
 - Tài khoản Khách thuê: `tenant101` / `tenant123`
+- Trang chia sẻ công khai: `http://localhost:8000/share/demo-token-101`
 
 ---
 
-## Tài liệu kiểm thử & Demo
+## Tài liệu dự án & Trình diễn
 
 - Hướng dẫn cài đặt sạch: [docs/INSTALL.md](docs/INSTALL.md)
-- Kịch bản demo 7 trường hợp kiểm thử cho Ban Giám Khảo: [docs/DEMO.md](docs/DEMO.md)
+- Hướng dẫn triển khai Production: [docs/DEPLOY.md](docs/DEPLOY.md)
+- Kịch bản demo 7 trường hợp kiểm thử: [docs/DEMO.md](docs/DEMO.md)
+- Bộ slide thuyết trình 15 phút: [docs/PRESENTATION.md](docs/PRESENTATION.md)
+- Kịch bản diễn tập từng giây: [docs/REHEARSAL.md](docs/REHEARSAL.md)
 - Lịch sử thay đổi các phiên bản: [CHANGELOG.md](CHANGELOG.md)
 - Danh mục giấy phép thư viện bên thứ ba: [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md)
 
