@@ -73,12 +73,24 @@
 
     <!-- BANNER CẢNH BÁO NẾU CÓ HÓA ĐƠN THU VƯỢT QUY ĐỊNH -->
     {% if overcharge_count > 0 %}
-    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm">
-        <div class="flex">
-            <div class="flex-shrink-0 text-red-500 font-bold text-xl">⚖️</div>
-            <div class="ml-3 text-xs text-red-900 space-y-1">
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm space-y-2">
+        <div class="flex items-start">
+            <div class="flex-shrink-0 text-red-500 font-bold text-xl mr-2">⚖️</div>
+            <div class="text-xs text-red-900 space-y-1">
                 <p class="font-bold text-sm text-red-800">CẢNH BÁO PHÁP LÝ: PHÁT HIỆN {{ overcharge_count }} HÓA ĐƠN THU TIỀN CAO HƠN QUY ĐỊNH NHÀ NƯỚC!</p>
-                <p>Theo <strong>Điều 31 Nghị định số 133/2026/NĐ-CP</strong>, hành vi thu tiền điện nước cao hơn quy chuẩn sẽ bị xử phạt từ <strong>20.000.000 đ đến 30.000.000 đ</strong>. Vui lòng kiểm tra lại tiền thực thu tại các hóa đơn được đánh dấu đỏ bên dưới.</p>
+                <p>Theo <strong>Điều 31 Nghị định số 133/2026/NĐ-CP</strong>, hành vi thu tiền điện nước cao hơn quy chuẩn sẽ bị xử phạt từ <strong>20.000.000 đ đến 30.000.000 đ</strong>.</p>
+                <div class="mt-2 pt-2 border-t border-red-200">
+                    <span class="font-bold">Các hóa đơn vi phạm cần xử lý ngay:</span>
+                    <ul class="mt-1 list-disc list-inside font-mono">
+                        {% for bad_inv in overcharge_invoices %}
+                        <li>
+                            <a href="/invoices/{{ bad_inv.id }}" class="text-red-700 underline font-bold hover:text-red-900">
+                                Hóa đơn #{{ bad_inv.id }} (Phòng {{ bad_inv.room.name }} - Tháng {{ bad_inv.month }}): Thu vượt +{{ bad_inv.difference|vnd }} đ &rarr;
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
