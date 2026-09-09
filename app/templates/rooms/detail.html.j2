@@ -5,8 +5,10 @@
 <div class="space-y-6">
     <div class="flex justify-between items-start border-b pb-5 border-gray-200">
         <div>
-            <a href="/properties/{{ room.property_id }}" class="text-xs text-gray-500 hover:underline">&larr; Quay lại cơ sở</a>
-            <h1 class="text-2xl font-bold text-gray-900 mt-1">{{ room.name }}</h1>
+            <a href="/properties/{{ room.property_id }}" class="inline-flex items-center px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-50 shadow-sm transition mb-2">
+                &larr; Quay lại cơ sở
+            </a>
+            <h1 class="text-2xl font-bold text-gray-900">{{ room.name }}</h1>
             <div class="flex items-center space-x-3 text-sm text-gray-500 mt-1">
                 <span>Số người: <strong>{{ room.people_count }}</strong></span>
                 <span>•</span>
