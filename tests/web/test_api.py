@@ -13,7 +13,7 @@ def test_healthcheck():
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "ok"
-    assert data["version"] == "0.2.0"
+    assert data["version"] == "1.0.0"
 
 
 def test_dashboard_page():
@@ -212,3 +212,40 @@ def test_pdf_export_and_public_share():
     assert res_owner_pdf.status_code == 200
     assert res_owner_pdf.headers["content-type"] == "application/pdf"
     assert res_owner_pdf.content.startswith(b"%PDF")
+
+
+
+
+
+def test_custom_404_page():
+    """Kiểm thử trang báo lỗi 404 tùy biến giao diện."""
+    res = client.get("/non-existent-route-random-12345")
+    assert res.status_code == 404
+    assert "404" in res.text
+    assert "Không tìm thấy trang yêu cầu" in res.text
+
+
+def test_navbar_auth_state():
+    """Kiểm thử hiển thị động trên Navbar theo trạng thái đăng nhập."""
+    # 1. Chưa đăng nhập: hiện nút Đăng nhập
+    res_anon = client.get("/")
+    assert res_anon.status_code == 200
+    assert "Đăng nhập" in res_anon.text
+
+    # 2. Đăng nhập Chủ trọ: hiện Chủ trọ và nút Đăng xuất
+    db = SessionLocal()
+    owner = db.query(User).filter_by(username="owner").first()
+    tenant = db.query(User).filter_by(username="tenant101").first()
+    db.close()
+
+    res_owner = client.get("/", cookies={"user_id": str(owner.id)})
+    assert res_owner.status_code == 200
+    assert "Chủ trọ" in res_owner.text
+    assert "Đăng xuất" in res_owner.text
+
+    # 3. Đăng nhập Người thuê: hiện Khách, link Hóa đơn của tôi và nút Đăng xuất
+    res_tenant = client.get("/my-invoices", cookies={"user_id": str(tenant.id)})
+    assert res_tenant.status_code == 200
+    assert "Khách" in res_tenant.text
+    assert "Hóa đơn của tôi" in res_tenant.text
+    assert "Đăng xuất" in res_tenant.text

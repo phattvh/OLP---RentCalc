@@ -20,7 +20,7 @@ router = APIRouter(tags=["auth"])
 @router.get("/login", response_class=HTMLResponse)
 def login_page(request: Request, user: User | None = Depends(get_current_user_optional)):
     if user:
-        return RedirectResponse("/", status_code=303)
+        return RedirectResponse("/my-invoices" if user.role == "tenant" else "/", status_code=303)
     return templates.TemplateResponse(
         request=request, name="auth/login.html.j2", context={"error": None}
     )

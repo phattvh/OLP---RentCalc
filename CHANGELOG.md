@@ -2,6 +2,30 @@
 
 Định dạng theo [Keep a Changelog](https://keepachangelog.com/vi/1.0.0/), phiên bản theo [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [1.0.0] - 2026-09-12
+
+### Added
+
+- **Hoàn thiện khả năng tiếp cận (Accessibility - a11y):** Tích hợp đầy đủ các thuộc tính WCAG/ARIA (`aria-label`, `aria-live="polite"`, `role="alert"`), nút skip-link "Bỏ qua menu điều hướng" cho người dùng bàn phím hoặc đọc màn hình.
+- **Trang báo lỗi giao diện tùy biến (Custom Error Pages):** Bổ sung trang lỗi 404 ("Không tìm thấy trang") và 500 ("Lỗi máy chủ nội bộ") đồng bộ với nhận diện thương hiệu RentCalc.
+- **Cấu hình triển khai Production hoàn chỉnh:** Cung cấp `docker-compose.prod.yml`, cấu hình Nginx Reverse Proxy (`nginx.conf`), và tài liệu hướng dẫn vận hành chi tiết tại `docs/DEPLOY.md`.
+- **Tài liệu trình diễn & Kịch bản diễn tập:** Soạn thảo bộ 15 slide thuyết trình (`docs/PRESENTATION.md`) và kịch bản diễn tập chi tiết từng giây cho 15 phút bảo vệ đề tài trước Ban Giám Khảo (`docs/REHEARSAL.md`).
+- **Trạng thái xác thực động trên Navbar:** Hiển thị danh tính người dùng đăng nhập (`Chủ trọ` / `Khách`), liên kết truy cập nhanh "Hóa đơn của tôi" cho người thuê, và nút "Đăng xuất" an toàn.
+- **Endpoint kiểm tra sức khỏe hệ thống:** Route `/health` chuẩn hóa phục vụ giám sát container Docker và pipeline CI/CD.
+
+### Changed
+
+- **Tối ưu hóa hiệu năng tải trang:** Minify toàn diện file CSS tĩnh của Tailwind phục vụ môi trường production.
+- **Nâng cấp nhận diện thương hiệu:** Cập nhật nhãn phiên bản `v1.0.0` trên toàn bộ Header, Footer, metadata ứng dụng và tài liệu kỹ thuật.
+- **Tăng cường trải nghiệm điều hướng:** Tự động chuyển hướng người dùng theo vai trò khi truy cập trang đăng nhập.
+
+### Tests
+
+- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404 và trạng thái xác thực Navbar: **51/51 tests pass 100%**, Code Coverage đạt **85%**.
+- Hoàn thành diễn tập chạy thử (dry-run) toàn bộ 7 ca kiểm thử chính thức của đề thi mà không có bất kỳ sai số nào.
+
+---
+
 ## [0.3.0] - 2026-09-09
 
 ### Added
