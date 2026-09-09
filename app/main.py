@@ -5,6 +5,7 @@
 import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from app.web.routers import auth
 
 from app.web.routers import (
     admin_config,
@@ -37,6 +38,7 @@ app.include_router(invoices.router, tags=["invoices"])
 app.include_router(admin_config.router, prefix="/admin", tags=["admin"])
 app.include_router(comparisons.router, tags=["comparisons"])
 app.include_router(public_share.router)
+app.include_router(auth.router)
 
 @app.get("/health")
 def health():
