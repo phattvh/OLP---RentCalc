@@ -6,12 +6,13 @@ from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
+from app.auth import require_owner
 from app.db.repositories.room_repo import RoomRepository
 from app.db.session import get_db
 from app.services.meter_service import MeterService
 from app.web.templates import templates
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_owner)])
 
 
 @router.get("/rooms/{room_id}/readings/new", response_class=HTMLResponse)

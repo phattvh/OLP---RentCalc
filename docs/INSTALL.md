@@ -84,4 +84,4 @@ Chạy kiểm thử toàn bộ dự án và đo lường độ bao phủ mã ngu
 pytest --cov=app --cov-report=term-missing
 ```
 
-- Tiêu chuẩn nghiệm thu: **49/49 tests pass 100%**, Coverage $\ge$ 85%.
+- Tiêu chuẩn nghiệm thu: **56/56 tests pass 100%**, Coverage $\ge$ 85%.

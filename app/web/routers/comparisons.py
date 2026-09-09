@@ -6,10 +6,11 @@ from fastapi import APIRouter, Depends, Form
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
+from app.auth import require_owner
 from app.db.session import get_db
 from app.services.invoice_service import InvoiceService
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_owner)])
 
 
 @router.post("/invoices/{invoice_id}/comparison", response_class=RedirectResponse)

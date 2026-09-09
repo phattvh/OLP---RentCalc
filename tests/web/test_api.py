@@ -1,11 +1,37 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
-"""Kiểm thử các routes Web và API FastAPI."""
+"""Kiểm thử các routes Web và API FastAPI với xác thực signed cookie và phân quyền RBAC."""
 
+import pytest
+from decimal import Decimal
 from fastapi.testclient import TestClient
+
+from app.auth import (
+    hash_password,
+    require_owner,
+    require_tenant,
+    sign_user_id,
+    verify_password,
+    verify_signed_user_id,
+)
+from app.db.models import Room, User
+from app.db.session import SessionLocal
 from app.main import app
+from app.services.calculation_service import CalculationService
+from app.services.pdf_service import render_html_to_pdf
+from app.services.sharing_service import SharingService
+from app.web.templates import format_pct, format_vnd
 
 client = TestClient(app)
+
+
+def get_auth_cookies(role: str = "owner") -> dict:
+    """Tạo signed cookie hợp lệ cho vai trò owner hoặc tenant."""
+    db = SessionLocal()
+    user = db.query(User).filter_by(role=role).first()
+    db.close()
+    assert user is not None
+    return {"user_id": sign_user_id(user.id)}
 
 
 def test_healthcheck():
@@ -24,34 +50,34 @@ def test_dashboard_page():
 
 
 def test_properties_pages():
+    cookies = get_auth_cookies("owner")
     # Danh sách cơ sở
-    res_list = client.get("/properties")
+    res_list = client.get("/properties", cookies=cookies)
     assert res_list.status_code == 200
     assert "Cơ sở cho thuê" in res_list.text
 
     # Form thêm mới
-    res_form = client.get("/properties/new")
+    res_form = client.get("/properties/new", cookies=cookies)
     assert res_form.status_code == 200
 
 
 def test_admin_configs_page():
-    res = client.get("/admin/configs")
+    cookies = get_auth_cookies("owner")
+    res = client.get("/admin/configs", cookies=cookies)
     assert res.status_code == 200
     assert "Quản lý biểu giá" in res.text
 
 
 def test_invoices_list_page():
-    res = client.get("/invoices")
+    cookies = get_auth_cookies("owner")
+    res = client.get("/invoices", cookies=cookies)
     assert res.status_code == 200
 
-    res_filtered = client.get("/invoices?property_id=1")
+    res_filtered = client.get("/invoices?property_id=1", cookies=cookies)
     assert res_filtered.status_code == 200
 
 
 def test_template_filters():
-    from app.web.templates import format_vnd, format_pct
-    from decimal import Decimal
-
     assert format_vnd(None) == "0"
     assert format_vnd(1234567) == "1,234,567"
     assert format_vnd(Decimal("1234567.89")) == "1,234,568"
@@ -62,10 +88,10 @@ def test_template_filters():
     assert format_pct(Decimal("0.05")) == "5%"
     assert format_pct("invalid") == "invalid"
 
+
 def test_rollover_meter_reading_via_ui():
     """Kiểm thử gửi dữ liệu công tơ quay vòng (end < start) qua web."""
-    from app.db.session import SessionLocal
-    from app.db.models import Room
+    cookies = get_auth_cookies("owner")
     db = SessionLocal()
     room = db.query(Room).first()
     db.close()
@@ -81,17 +107,10 @@ def test_rollover_meter_reading_via_ui():
             "end_reading": "120",
             "notes": "Kiểm thử công tơ quay vòng",
         },
+        cookies=cookies,
         follow_redirects=False,
     )
     assert response.status_code == 303
-    
-import pytest
-from app.auth import hash_password, verify_password, require_owner, require_tenant
-from app.db.models import User, Room
-from app.db.session import SessionLocal
-from app.services.calculation_service import CalculationService
-from app.services.sharing_service import SharingService
-from app.services.pdf_service import render_html_to_pdf
 
 
 def test_auth_password_hashing():
@@ -118,6 +137,19 @@ def test_auth_role_dependencies():
         require_tenant(owner)
 
 
+def test_signed_cookie_verification():
+    """Kiểm thử cơ chế ký và xác thực cookie chống giả mạo quyền hạn."""
+    user_id = 42
+    signed = sign_user_id(user_id)
+    assert verify_signed_user_id(signed) == user_id
+
+    # Cookie giả mạo, không có chữ ký hoặc chữ ký sai
+    assert verify_signed_user_id(str(user_id)) is None
+    assert verify_signed_user_id(f"{user_id}.invalid_signature") is None
+    assert verify_signed_user_id("") is None
+    assert verify_signed_user_id(None) is None
+
+
 def test_login_and_logout_flow():
     """Kiểm thử luồng đăng nhập đúng/sai và đăng xuất."""
     # 1. GET login page
@@ -133,7 +165,7 @@ def test_login_and_logout_flow():
     assert res_wrong.status_code == 400
     assert "không chính xác" in res_wrong.text
 
-    # 3. Đăng nhập đúng Owner -> redirect về Dashboard
+    # 3. Đăng nhập đúng Owner -> redirect về Dashboard và nhận signed cookie
     res_owner = client.post(
         "/login",
         data={"username": "owner", "password": "owner123"},
@@ -141,7 +173,8 @@ def test_login_and_logout_flow():
     )
     assert res_owner.status_code == 303
     assert res_owner.headers["location"] == "/"
-    assert "user_id" in res_owner.headers.get("set-cookie", "")
+    cookie_header = res_owner.headers.get("set-cookie", "")
+    assert "user_id" in cookie_header
 
     # 4. Đăng nhập đúng Tenant -> redirect về trang hóa đơn cá nhân
     res_tenant = client.post(
@@ -169,16 +202,38 @@ def test_tenant_my_invoices_page():
     res_unauth = client.get("/my-invoices")
     assert res_unauth.status_code == 401
 
-    # Đã login với cookie của tenant
-    client.cookies.set("user_id", str(tenant.id))
-    res_auth = client.get("/my-invoices")
+    # Đã login với signed cookie của tenant
+    res_auth = client.get("/my-invoices", cookies={"user_id": sign_user_id(tenant.id)})
     assert res_auth.status_code == 200
     assert "Hóa đơn tiền phòng của bạn" in res_auth.text
-    client.cookies.clear()
+
+
+def test_rbac_protection_and_cookie_tampering():
+    """Kiểm thử bảo mật RBAC: chặn truy cập không quyền và cookie giả mạo."""
+    # 1. Truy cập trang Owner khi chưa đăng nhập -> 401
+    assert client.get("/properties").status_code == 401
+    assert client.get("/admin/configs").status_code == 401
+    assert client.get("/invoices").status_code == 401
+
+    # 2. Giả mạo cookie bằng user_id thô (chưa ký HMAC) -> 401
+    db = SessionLocal()
+    owner = db.query(User).filter_by(role="owner").first()
+    db.close()
+    assert owner is not None
+
+    res_tampered = client.get("/properties", cookies={"user_id": str(owner.id)})
+    assert res_tampered.status_code == 401
+
+    # 3. Tenant truy cập trang quản trị Owner -> 403 Forbidden
+    tenant_cookies = get_auth_cookies("tenant")
+    assert client.get("/properties", cookies=tenant_cookies).status_code == 403
+    assert client.get("/admin/configs", cookies=tenant_cookies).status_code == 403
 
 
 def test_pdf_export_and_public_share():
     """Kiểm thử render PDF, trang chia sẻ công khai và link tải PDF."""
+    owner_cookies = get_auth_cookies("owner")
+
     # 1. Test hàm render PDF
     pdf_bytes = render_html_to_pdf("<h1>RentCalc Invoice</h1>")
     assert isinstance(pdf_bytes, bytes)
@@ -192,7 +247,7 @@ def test_pdf_export_and_public_share():
     token = SharingService(db).get_or_create_token(inv.id)
     db.close()
 
-    # 3. Xem trang chia sẻ công khai
+    # 3. Xem trang chia sẻ công khai (Không cần đăng nhập)
     res_share = client.get(f"/share/{token}")
     assert res_share.status_code == 200
     assert "HÓA ĐƠN TIỀN ĐIỆN NƯỚC MINH BẠCH" in res_share.text
@@ -201,26 +256,23 @@ def test_pdf_export_and_public_share():
     res_404 = client.get("/share/invalid_token_xyz")
     assert res_404.status_code == 404
 
-    # 4. Tải file PDF từ trang công khai
+    # 4. Tải file PDF từ trang công khai (Không cần đăng nhập)
     res_public_pdf = client.get(f"/share/{token}/pdf")
     assert res_public_pdf.status_code == 200
     assert res_public_pdf.headers["content-type"] == "application/pdf"
     assert res_public_pdf.content.startswith(b"%PDF")
 
-    # 5. Tải file PDF từ trang chủ nhà
-    res_owner_pdf = client.get(f"/invoices/{inv.id}/pdf")
+    # 5. Tải file PDF từ trang chủ nhà (Có đăng nhập Owner)
+    res_owner_pdf = client.get(f"/invoices/{inv.id}/pdf", cookies=owner_cookies)
     assert res_owner_pdf.status_code == 200
     assert res_owner_pdf.headers["content-type"] == "application/pdf"
     assert res_owner_pdf.content.startswith(b"%PDF")
 
-    # 6. Tải file PDF qua URL /invoices/{token}/pdf
+    # 6. Tải file PDF qua URL /invoices/{token}/pdf với share token
     res_token_pdf = client.get(f"/invoices/{token}/pdf")
     assert res_token_pdf.status_code == 200
     assert res_token_pdf.headers["content-type"] == "application/pdf"
     assert res_token_pdf.content.startswith(b"%PDF")
-
-
-
 
 
 def test_custom_404_page():
@@ -244,13 +296,13 @@ def test_navbar_auth_state():
     tenant = db.query(User).filter_by(username="tenant101").first()
     db.close()
 
-    res_owner = client.get("/", cookies={"user_id": str(owner.id)})
+    res_owner = client.get("/", cookies={"user_id": sign_user_id(owner.id)})
     assert res_owner.status_code == 200
     assert "Chủ trọ" in res_owner.text
     assert "Đăng xuất" in res_owner.text
 
     # 3. Đăng nhập Người thuê: hiện Khách, link Hóa đơn của tôi và nút Đăng xuất
-    res_tenant = client.get("/my-invoices", cookies={"user_id": str(tenant.id)})
+    res_tenant = client.get("/my-invoices", cookies={"user_id": sign_user_id(tenant.id)})
     assert res_tenant.status_code == 200
     assert "Khách" in res_tenant.text
     assert "Hóa đơn của tôi" in res_tenant.text
@@ -258,6 +310,6 @@ def test_navbar_auth_state():
     assert "Tổng quan" not in res_tenant.text
 
     # 4. Người thuê vào trang chủ / -> tự động redirect về /my-invoices
-    res_tenant_root = client.get("/", cookies={"user_id": str(tenant.id)}, follow_redirects=False)
+    res_tenant_root = client.get("/", cookies={"user_id": sign_user_id(tenant.id)}, follow_redirects=False)
     assert res_tenant_root.status_code == 303
-    assert res_tenant_root.headers["location"] == "/my-invoices"
+    assert res_tenant_root.headers["location"] == "/my-invoices"

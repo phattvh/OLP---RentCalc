@@ -6,11 +6,10 @@ from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.auth import get_current_user_optional, require_tenant, verify_password
-from app.db.repositories.invoice_repo import InvoiceRepository
 
-from app.auth import get_current_user_optional, verify_password
+from app.auth import get_current_user_optional, require_tenant, sign_user_id, verify_password
 from app.db.models import User
+from app.db.repositories.invoice_repo import InvoiceRepository
 from app.db.session import get_db
 from app.web.templates import templates
 
@@ -47,7 +46,7 @@ def login(
     # Đăng nhập thành công -> điều hướng theo vai trò
     redirect_url = "/my-invoices" if user.role == "tenant" else "/"
     response = RedirectResponse(redirect_url, status_code=303)
-    response.set_cookie("user_id", str(user.id), httponly=True, samesite="lax")
+    response.set_cookie("user_id", sign_user_id(user.id), httponly=True, samesite="lax")
     return response
 
 

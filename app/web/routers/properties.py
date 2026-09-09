@@ -6,12 +6,13 @@ from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
+from app.auth import require_owner
 from app.db.models import Property
 from app.db.repositories.property_repo import PropertyRepository
 from app.db.session import get_db
 from app.web.templates import templates
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_owner)])
 
 
 @router.get("", response_class=HTMLResponse)

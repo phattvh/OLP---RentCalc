@@ -36,12 +36,14 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 @app.middleware("http")
 async def attach_user_middleware(request: Request, call_next):
     """Middleware gắn thông tin người dùng đang đăng nhập vào request.state.user."""
-    user_id = request.cookies.get("user_id")
+    from app.auth import verify_signed_user_id
+    cookie_val = request.cookies.get("user_id")
+    user_id = verify_signed_user_id(cookie_val)
     user = None
     if user_id:
         try:
             with SessionLocal() as db:
-                user = db.get(User, int(user_id))
+                user = db.get(User, user_id)
         except Exception:
             user = None
     request.state.user = user

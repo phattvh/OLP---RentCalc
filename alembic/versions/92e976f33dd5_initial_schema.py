@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
 """initial schema
 
 Revision ID: 92e976f33dd5

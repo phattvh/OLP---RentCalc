@@ -8,10 +8,9 @@ from pathlib import Path
 # Thêm thư mục gốc của dự án vào sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from datetime import datetime, timezone
 from app.auth import hash_password
 from app.db.models import Property, Room, TariffConfig, User
-from datetime import datetime, timezone
-from app.db.models import Property, Room, TariffConfig
 from app.db.session import SessionLocal
 
 

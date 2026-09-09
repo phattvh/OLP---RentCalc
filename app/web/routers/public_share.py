@@ -2,11 +2,9 @@
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
 """Trang công khai cho người thuê xem hóa đơn qua share_token, không cần đăng nhập."""
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
-
-from fastapi.responses import HTMLResponse, Response
 from app.services.pdf_service import render_html_to_pdf
 from app.db.repositories.invoice_repo import InvoiceRepository
 from app.db.session import get_db

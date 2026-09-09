@@ -2,16 +2,16 @@
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
 """Router quản trị cấu hình biểu giá điện nước nhà nước."""
 
-import json
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
+from app.auth import require_owner
 from app.db.session import get_db
 from app.services.config_service import ConfigService
 from app.web.templates import templates
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_owner)])
 
 
 @router.get("/configs", response_class=HTMLResponse)

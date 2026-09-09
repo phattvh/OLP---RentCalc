@@ -1,12 +1,14 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Phat Tran Vu Hoa - RentCalc
-"""Module xác thực người dùng và phân quyền theo cookie phiên làm việc."""
+"""Module xác thực người dùng và phân quyền theo cookie phiên làm việc đã ký HMAC."""
 
 import hashlib
+import hmac
 import secrets
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.db.models import User
 from app.db.session import get_db
 
@@ -32,16 +34,43 @@ def verify_password(password: str, password_hash: str) -> bool:
         return False
 
 
+def sign_user_id(user_id: int) -> str:
+    """Tạo chữ ký HMAC-SHA256 bảo vệ tính toàn vẹn của user_id trong cookie."""
+    data = str(user_id).encode("utf-8")
+    sig = hmac.new(settings.secret_key.encode("utf-8"), data, hashlib.sha256).hexdigest()
+    return f"{user_id}.{sig}"
+
+
+def verify_signed_user_id(cookie_val: str | None) -> int | None:
+    """Kiểm tra tính hợp lệ của cookie user_id đã ký HMAC để chống giả mạo quyền hạn."""
+    if not cookie_val or "." not in cookie_val:
+        return None
+    parts = cookie_val.split(".", 1)
+    if len(parts) != 2:
+        return None
+    raw_id, sig = parts
+    expected_sig = hmac.new(
+        settings.secret_key.encode("utf-8"), raw_id.encode("utf-8"), hashlib.sha256
+    ).hexdigest()
+    if secrets.compare_digest(sig, expected_sig):
+        try:
+            return int(raw_id)
+        except ValueError:
+            return None
+    return None
+
+
 def get_current_user_optional(
     request: Request, db: Session = Depends(get_db)
 ) -> User | None:
-    """Lấy thông tin người dùng hiện tại từ cookie, nếu chưa đăng nhập trả về None."""
-    user_id = request.cookies.get("user_id")
+    """Lấy thông tin người dùng hiện tại từ signed cookie, nếu chưa đăng nhập trả về None."""
+    cookie_val = request.cookies.get("user_id")
+    user_id = verify_signed_user_id(cookie_val)
     if not user_id:
         return None
     try:
-        return db.get(User, int(user_id))
-    except (ValueError, TypeError):
+        return db.get(User, user_id)
+    except Exception:
         return None
 
 
