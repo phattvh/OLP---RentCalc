@@ -8,6 +8,8 @@ from pathlib import Path
 # Thêm thư mục gốc của dự án vào sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from app.auth import hash_password
+from app.db.models import Property, Room, TariffConfig, User
 from datetime import datetime, timezone
 from app.db.models import Property, Room, TariffConfig
 from app.db.session import SessionLocal
@@ -90,6 +92,24 @@ def seed():
             db.add_all([r1, r2])
             db.commit()
             print("✓ Đã nạp 2 phòng trọ mẫu (Phòng 101 & 102)")
+
+        # 4. Nạp tài khoản demo phân quyền
+        if db.query(User).count() == 0:
+            sample_room = db.query(Room).first()
+            owner_user = User(
+                username="owner",
+                password_hash=hash_password("owner123"),
+                role="owner",
+            )
+            tenant_user = User(
+                username="tenant101",
+                password_hash=hash_password("tenant123"),
+                role="tenant",
+                room_id=sample_room.id if sample_room else None,
+            )
+            db.add_all([owner_user, tenant_user])
+            db.commit()
+            print("✓ Đã nạp tài khoản demo: owner (chủ nhà) & tenant101 (người thuê)")
 
         print("🎉 Seed dữ liệu thành công hoàn tất!")
     except Exception as e:
