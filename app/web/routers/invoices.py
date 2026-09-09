@@ -6,6 +6,8 @@ from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
+from app.services.pdf_service import render_html_to_pdf
 from app.db.repositories.invoice_repo import InvoiceRepository
 from app.db.session import get_db
 from app.services.calculation_service import CalculationService
@@ -67,4 +69,32 @@ def invoice_detail(invoice_id: int, request: Request, db: Session = Depends(get_
             "calc": invoice.calculation_result,
             "snap": invoice.input_snapshot,
         },
+    )
+    
+@router.get("/{invoice_id}/pdf")
+def export_invoice_pdf(
+    invoice_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    """Xuất hóa đơn tiền phòng ra file PDF chính thức."""
+    invoice = InvoiceRepository(db).get(invoice_id)
+    if not invoice:
+        raise HTTPException(status_code=404, detail="Không tìm thấy hóa đơn")
+
+    html_content = templates.TemplateResponse(
+        request=request,
+        name="invoices/pdf_template.html.j2",
+        context={
+            "invoice": invoice,
+            "calc": invoice.calculation_result,
+            "snap": invoice.input_snapshot,
+        },
+    ).body.decode("utf-8")
+
+    pdf_bytes = render_html_to_pdf(html_content)
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="hoa-don-{invoice.month}-phong-{invoice.room.name}.pdf"'},
     )
