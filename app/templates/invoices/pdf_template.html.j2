@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <title>Hóa đơn tiền phòng {{ invoice.room.name }} - Kỳ {{ invoice.month }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+        @font-face {
+            font-family: 'Arial';
+            src: url('C:/Windows/Fonts/arial.ttf');
+        }
+        body, h1, h2, h3, p, div, table, th, td, span, strong {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            line-height: 1.4;
+            font-size: 12px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #2b6cb0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2b6cb0;
+            margin: 5px 0;
+            text-transform: uppercase;
+        }
+        .meta-table {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .meta-table td {
+            padding: 5px 4px;
+            vertical-align: middle;
+        }
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        table.data-table th, table.data-table td {
+            border: 1px solid #cbd5e0;
+            padding: 8px;
+            vertical-align: middle;
+        }
+        table.data-table th {
+            background-color: #edf2f7;
+            font-weight: bold;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: bold; }
+        .section-bar {
+            width: 100%;
+            background-color: #f7fafc;
+            border-left: 4px solid #3182ce;
+            margin: 15px 0 8px 0;
+        }
+        .section-bar td {
+            padding: 6px 8px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #2d3748;
+            vertical-align: middle;
+        }
+        .total-box-table {
+            width: 100%;
+            background-color: #ebf8ff;
+            border: 2px solid #3182ce;
+            margin-top: 15px;
+        }
+        .total-box-table td {
+            padding: 10px 15px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #2b6cb0;
+            text-align: right;
+            vertical-align: middle;
+        }
+        .signature-table {
+            width: 100%;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .signature-space {
+            height: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div style="font-size: 14px; font-weight: bold; color: #4a5568;">HỆ THỐNG QUẢN LÝ NHÀ TRỌ RENTCALC</div>
+        <div class="title">GIẤY BÁO TIỀN PHÒNG & ĐIỆN NƯỚC SINH HOẠT</div>
+        <div style="font-style: italic; color: #718096;">Kỳ thanh toán: Tháng {{ invoice.month }}</div>
+    </div>
+
+    <table class="meta-table">
+        <tr valign="middle">
+            <td width="50%" valign="middle"><strong>Cơ sở cho thuê:</strong> {{ invoice.room.property.name }}</td>
+            <td width="50%" valign="middle"><strong>Phòng:</strong> {{ invoice.room.name }}</td>
+        </tr>
+        <tr valign="middle">
+            <td valign="middle"><strong>Địa chỉ:</strong> {{ invoice.room.property.address or 'Theo hợp đồng thuê' }}</td>
+            <td valign="middle"><strong>Số nhân khẩu đăng ký:</strong> {{ snap.people_count }} người</td>
+        </tr>
+        <tr valign="middle">
+            <td valign="middle"><strong>Số định mức điện áp dụng:</strong> {{ calc.electricity.quota or 1 }} định mức</td>
+            <td valign="middle"><strong>Mã hóa đơn:</strong> #{{ invoice.id }}</td>
+        </tr>
+    </table>
+
+    <!-- PHẦN 1: TIỀN ĐIỆN -->
+    <table class="section-bar">
+        <tr valign="middle">
+            <td valign="middle">1. TÍNH TIỀN ĐIỆN THEO BẬC THANG</td>
+        </tr>
+    </table>
+    <table class="data-table">
+        <thead>
+            <tr valign="middle">
+                <th style="width: 16%;" valign="middle">Bậc</th>
+                <th valign="middle">Sản lượng (kWh)</th>
+                <th valign="middle">Đơn giá quy định (đ)</th>
+                <th valign="middle">Thành tiền (đ)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for line in calc.electricity.breakdown %}
+            <tr valign="middle">
+                <td valign="middle">{{ line.tier_name }}</td>
+                <td class="text-right" valign="middle">{{ line.consumption }}</td>
+                <td class="text-right" valign="middle">{{ line.unit_price|vnd }}</td>
+                <td class="text-right font-bold" valign="middle">{{ line.amount|vnd }}</td>
+            </tr>
+            {% endfor %}
+            <tr valign="middle">
+                <td colspan="3" class="text-right" valign="middle"><strong>Tiền điện trước thuế:</strong></td>
+                <td class="text-right font-bold" valign="middle">{{ calc.electricity.subtotal|vnd }} đ</td>
+            </tr>
+            <tr valign="middle">
+                <td colspan="3" class="text-right" valign="middle">Thuế GTGT (VAT {{ calc.electricity.vat_rate|pct }}):</td>
+                <td class="text-right" valign="middle">{{ calc.electricity.vat|vnd }} đ</td>
+            </tr>
+            <tr style="background-color: #feebc8;" valign="middle">
+                <td colspan="3" class="text-right" valign="middle"><strong>TỔNG TIỀN ĐIỆN (ĐÃ LÀM TRÒN):</strong></td>
+                <td class="text-right font-bold" style="color: #9c4221;" valign="middle">{{ calc.electricity.total_rounded|vnd }} đ</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- PHẦN 2: TIỀN NƯỚC -->
+    <table class="section-bar">
+        <tr valign="middle">
+            <td valign="middle">2. TIỀN NƯỚC SINH HOẠT & PHÍ MÔI TRƯỜNG</td>
+        </tr>
+    </table>
+    <table class="data-table">
+        <thead>
+            <tr valign="middle">
+                <th valign="middle">Phương thức tính</th>
+                <th valign="middle">Khối lượng / Nhân khẩu</th>
+                <th valign="middle">Đơn giá (đ)</th>
+                <th valign="middle">Tiền trước thuế (đ)</th>
+                <th valign="middle">VAT 5% + BVMT 10%</th>
+                <th valign="middle">Tổng tiền nước (đ)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr valign="middle">
+                <td valign="middle">{% if calc.water.mode == 'volume' %}Đồng hồ khối{% else %}Khoán đầu người{% endif %}</td>
+                <td class="text-center" valign="middle">{% if calc.water.mode == 'volume' %}{{ calc.water.quantity }} m³{% else %}{{ calc.water.quantity }} người{% endif %}</td>
+                <td class="text-right" valign="middle">{{ calc.water.unit_price|vnd }}</td>
+                <td class="text-right" valign="middle">{{ calc.water.water_before_tax|vnd }}</td>
+                <td class="text-right" valign="middle">{{ (calc.water.total_rounded|int - calc.water.water_before_tax|int)|vnd }} đ</td>
+                <td class="text-right font-bold" style="color: #2b6cb0;" valign="middle">{{ calc.water.total_rounded|vnd }} đ</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- TỔNG CỘNG -->
+    <table class="total-box-table">
+        <tr valign="middle">
+            <td valign="middle">
+                TỔNG SỐ TIỀN PHẢI THANH TOÁN: {{ invoice.invoice_total_final|vnd }} VNĐ
+            </td>
+        </tr>
+    </table>
+
+    <!-- CHỮ KÝ -->
+    <table class="signature-table">
+        <tr>
+            <td width="50%">
+                <strong>NGƯỜI THUÊ PHÒNG</strong><br>
+                <span style="font-size: 10px; color: #718096;">(Ký và ghi rõ họ tên)</span>
+                <div class="signature-space"></div>
+            </td>
+            <td width="50%">
+                <strong>ĐẠI DIỆN CHỦ CƠ SỞ</strong><br>
+                <span style="font-size: 10px; color: #718096;">(Ký và ghi rõ họ tên)</span>
+                <div class="signature-space"></div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

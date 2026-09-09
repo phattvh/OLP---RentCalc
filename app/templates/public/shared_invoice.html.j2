@@ -1,0 +1,153 @@
+{% extends "base.html.j2" %}
+{% block title %}Hóa đơn tiền phòng công khai - Phòng {{ invoice.room.name }} ({{ invoice.month }}){% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header thông báo hóa đơn công khai -->
+    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-bold text-indigo-900">HÓA ĐƠN TIỀN ĐIỆN NƯỚC MINH BẠCH</h1>
+            <p class="text-sm text-indigo-700">Kỳ thanh toán: <strong class="font-mono">{{ invoice.month }}</strong> | Phòng: <strong>{{ invoice.room.name }}</strong> ({{ invoice.room.property.name }})</p>
+        </div>
+        <a href="/invoices/{{ invoice.share_token }}/pdf" target="_blank" class="px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded hover:bg-indigo-700 transition flex items-center space-x-1 shadow-sm">
+            <span>📄</span>
+            <span>Tải hóa đơn PDF</span>
+        </a>
+    </div>
+
+    <!-- KHỐI 1: BÓC TÁCH TIỀN ĐIỆN BẬC THANG -->
+    <div class="bg-white shadow rounded-lg border border-gray-200 overflow-hidden">
+        <div class="bg-amber-500 px-6 py-3 text-white flex justify-between items-center">
+            <h2 class="font-bold flex items-center space-x-2">
+                <span>⚡</span>
+                <span>BÓC TÁCH TIỀN ĐIỆN SINH HOẠT THEO BẬC THANG (QĐ 2741/QĐ-BCT)</span>
+            </h2>
+            <span class="text-xs bg-amber-600 px-2 py-1 rounded font-mono font-bold">
+                {{ calc.electricity.consumption }} kWh{% if calc.electricity.quota %} ({{ calc.electricity.quota }} định mức){% endif %}
+            </span>
+        </div>
+
+        <div class="p-6">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50 text-gray-600">
+                    <tr>
+                        <th class="px-4 py-2 text-left font-medium">Bậc thang quy định</th>
+                        <th class="px-4 py-2 text-right font-medium">Sản lượng (kWh)</th>
+                        <th class="px-4 py-2 text-right font-medium">Đơn giá nhà nước (đ/kWh)</th>
+                        <th class="px-4 py-2 text-right font-bold">Thành tiền (đ)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for line in calc.electricity.breakdown %}
+                    <tr>
+                        <td class="px-4 py-2 font-medium text-gray-800">{{ line.tier_name }}</td>
+                        <td class="px-4 py-2 text-right font-mono">{{ line.consumption }}</td>
+                        <td class="px-4 py-2 text-right font-mono">{{ line.unit_price|vnd }}</td>
+                        <td class="px-4 py-2 text-right font-mono font-semibold">{{ line.amount|vnd }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="bg-gray-50 font-medium">
+                        <td colspan="3" class="px-4 py-2 text-right text-gray-700">Cộng tiền điện trước thuế:</td>
+                        <td class="px-4 py-2 text-right font-mono">{{ calc.electricity.subtotal|vnd }} đ</td>
+                    </tr>
+                    <tr class="bg-gray-50 text-xs text-gray-600">
+                        <td colspan="3" class="px-4 py-1 text-right">Thuế GTGT (VAT {{ calc.electricity.vat_rate|pct }}):</td>
+                        <td class="px-4 py-1 text-right font-mono">{{ calc.electricity.vat|vnd }} đ</td>
+                    </tr>
+                    <tr class="bg-amber-50 font-bold text-amber-900 border-t-2 border-amber-300">
+                        <td colspan="3" class="px-4 py-2 text-right">TỔNG TIỀN ĐIỆN ĐÃ LÀM TRÒN:</td>
+                        <td class="px-4 py-2 text-right font-mono text-base">{{ calc.electricity.total_rounded|vnd }} đ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- KHỐI 2: TIỀN NƯỚC SINH HOẠT -->
+    <div class="bg-white shadow rounded-lg border border-gray-200 overflow-hidden">
+        <div class="bg-blue-600 px-6 py-3 text-white flex justify-between items-center">
+            <h2 class="font-bold flex items-center space-x-2">
+                <span>💧</span>
+                <span>TIỀN NƯỚC SINH HOẠT (KÈM VAT 5% & PHÍ BVMT 10%)</span>
+            </h2>
+            <span class="text-xs bg-blue-700 px-2 py-1 rounded font-mono">
+                {% if calc.water.mode == 'volume' %}{{ calc.water.quantity }} m³{% else %}{{ calc.water.quantity }} người{% endif %}
+            </span>
+        </div>
+
+        <div class="p-6">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <tbody class="divide-y divide-gray-100">
+                    <tr>
+                        <td class="py-2 text-gray-600">Phương thức tính:</td>
+                        <td class="py-2 text-right font-semibold">{% if calc.water.mode == 'volume' %}Đồng hồ nước theo khối{% else %}Khoán theo đầu người{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 text-gray-600">Khối lượng / Số người:</td>
+                        <td class="py-2 text-right font-mono">{% if calc.water.mode == 'volume' %}{{ calc.water.quantity }} m³{% else %}{{ calc.water.quantity }} người{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 text-gray-600">Đơn giá nước sạch:</td>
+                        <td class="py-2 text-right font-mono">{{ calc.water.unit_price|vnd }} đ/{% if calc.water.mode == 'volume' %}m³{% else %}người{% endif %}</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="py-2 text-gray-700 font-medium">Tiền nước trước thuế:</td>
+                        <td class="py-2 text-right font-mono font-medium">{{ calc.water.water_before_tax|vnd }} đ</td>
+                    </tr>
+                    <tr class="text-xs text-gray-500">
+                        <td class="py-1">Thuế GTGT (VAT 5%):</td>
+                        <td class="py-1 text-right font-mono">{{ calc.water.vat|vnd }} đ</td>
+                    </tr>
+                    <tr class="text-xs text-gray-500">
+                        <td class="py-1">Phí Bảo vệ môi trường nước thải (10%):</td>
+                        <td class="py-1 text-right font-mono">{{ calc.water.env_fee|vnd }} đ</td>
+                    </tr>
+                    <tr class="bg-blue-50 font-bold text-blue-900 border-t-2 border-blue-300">
+                        <td class="py-2">TỔNG TIỀN NƯỚC ĐÃ LÀM TRÒN:</td>
+                        <td class="py-2 text-right font-mono text-base">{{ calc.water.total_rounded|vnd }} đ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- KHỐI 3: TỔNG THANH TOÁN QUY ĐỊNH -->
+    <div class="bg-indigo-900 text-white rounded-lg p-6 shadow-md flex justify-between items-center">
+        <div>
+            <h3 class="text-lg font-bold">TỔNG CỘNG HÓA ĐƠN THEO QUY ĐỊNH PHÁP LUẬT</h3>
+            <p class="text-xs text-indigo-300 mt-1">Đã tính đủ thuế GTGT và phí bảo vệ môi trường theo luật định.</p>
+        </div>
+        <div class="text-3xl font-black font-mono text-amber-300">
+            {{ invoice.invoice_total_final|vnd }} đ
+        </div>
+    </div>
+
+    <!-- KHỐI 4: ĐỐI CHIẾU PHÁP LÝ (NẾU CHỦ NHÀ ĐÃ NHẬP THỰC THU) -->
+    {% if invoice.actual_collected is not none %}
+    <div class="p-5 rounded-lg border {% if invoice.difference > 0 %}bg-red-50 border-red-300 text-red-900{% else %}bg-green-50 border-green-300 text-green-900{% endif %}">
+        <div class="flex justify-between items-center text-sm mb-2">
+            <span>Số tiền chủ trọ thông báo thu: <strong class="font-mono">{{ invoice.actual_collected|vnd }} đ</strong></span>
+            <span>Tiền đúng chuẩn nhà nước: <strong class="font-mono">{{ invoice.invoice_total_final|vnd }} đ</strong></span>
+            <span>Chênh lệch: <strong class="font-mono text-base {% if invoice.difference > 0 %}text-red-700{% else %}text-green-700{% endif %}">{% if invoice.difference > 0 %}+{% endif %}{{ invoice.difference|vnd }} đ</strong></span>
+        </div>
+
+        {% if invoice.difference > 0 %}
+        <div class="mt-3 pt-3 border-t border-red-200 text-xs space-y-1">
+            <p class="font-bold text-red-800">⚠️ CẢNH BÁO: HÓA ĐƠN ĐANG THU CAO HƠN QUY ĐỊNH NHÀ NƯỚC</p>
+            <p>Khoản tiền thu chênh lệch: <strong>{{ invoice.difference|vnd }} đ</strong>.</p>
+            <p class="text-red-700">Căn cứ <strong>Điều 31 Nghị định số 133/2026/NĐ-CP</strong>, hành vi thu tiền điện nước của người thuê cao hơn giá quy định có thể bị phạt hành chính từ <strong>20.000.000 đ đến 30.000.000 đ</strong> và buộc hoàn trả tiền thu thừa cho người thuê.</p>
+        </div>
+        {% else %}
+        <div class="mt-2 text-xs text-green-800">
+            ✓ <strong>HỢP LỆ:</strong> Chủ nhà thu đúng quy chuẩn nhà nước. Hóa đơn minh bạch, bảo đảm quyền lợi người thuê.
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Footer minh bạch -->
+    <div class="text-center text-xs text-gray-500 py-4">
+        Hóa đơn được tạo tự động bởi hệ thống <strong>RentCalc</strong>. Người thuê có thể đối chiếu độc lập và lưu trữ link này để làm bằng chứng pháp lý khi cần.
+    </div>
+</div>
+{% endblock %}

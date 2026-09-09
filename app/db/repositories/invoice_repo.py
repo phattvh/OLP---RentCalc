@@ -20,7 +20,7 @@ class InvoiceRepository:
 
     def get(self, invoice_id: int) -> Invoice | None:
         return self.session.get(Invoice, invoice_id)
-
+    
     def get_by_share_token(self, share_token: str) -> Invoice | None:
         stmt = select(Invoice).where(Invoice.share_token == share_token)
         return self.session.scalars(stmt).first()

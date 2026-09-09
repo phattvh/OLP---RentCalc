@@ -1,94 +1,149 @@
 {% extends "base.html.j2" %}
 
-{% block title %}Tổng quan - RentCalc{% endblock %}
+{% block title %}Bảng điều khiển - RentCalc{% endblock %}
 
 {% block content %}
 <div class="space-y-6">
+    <!-- Tiêu đề và nút tác vụ nhanh -->
     <div class="sm:flex sm:items-center sm:justify-between border-b pb-5 border-gray-200">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">Bảng điều khiển tổng quan</h1>
-            <p class="mt-1 text-sm text-gray-500">Giám sát và minh bạch hóa chi phí điện nước phòng trọ theo quy chuẩn nhà nước.</p>
+            <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">Bảng điều khiển</h1>
         </div>
-        <div class="mt-4 sm:mt-0 flex space-x-3">
-            <a href="/properties/new" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition">
+        <div class="mt-4 sm:mt-0 flex flex-wrap gap-2.5 items-center">
+            <a href="/properties/new" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition">
                 + Thêm cơ sở
             </a>
-            <a href="/admin/configs/new" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition">
+            <a href="/admin/configs/new" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 transition">
                 + Cập nhật biểu giá
             </a>
         </div>
     </div>
 
-    <!-- Thẻ thống kê nhanh -->
-    <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-100 p-5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-indigo-50 text-indigo-600 rounded-md p-3 text-2xl">🏢</div>
-                <div class="ml-5 w-0 flex-1">
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">Tổng cơ sở cho thuê</dt>
-                        <dd class="text-3xl font-semibold text-gray-900">{{ total_properties }}</dd>
-                    </dl>
-                </div>
+    <!-- 4 THẺ THỐNG KÊ CHÍNH (ĐẢM BẢO 4 CỘT TRÊN DESKTOP, KHOẢNG CÁCH ICON RÕ RÀNG) -->
+    <div class="stats-grid">
+        <!-- Cơ sở -->
+        <div class="stat-card">
+            <div class="stat-icon bg-indigo-50 text-indigo-600">🏢</div>
+            <div class="flex-1 min-w-0">
+                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Cơ sở cho thuê</div>
+                <div class="mt-1 text-2xl font-black text-gray-900">{{ total_properties }}</div>
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-100 p-5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-blue-50 text-blue-600 rounded-md p-3 text-2xl">🚪</div>
-                <div class="ml-5 w-0 flex-1">
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">Tổng số phòng trọ</dt>
-                        <dd class="text-3xl font-semibold text-gray-900">{{ total_rooms }}</dd>
-                    </dl>
-                </div>
+        <!-- Phòng trọ -->
+        <div class="stat-card">
+            <div class="stat-icon bg-blue-50 text-blue-600">🚪</div>
+            <div class="flex-1 min-w-0">
+                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Phòng đang quản lý</div>
+                <div class="mt-1 text-2xl font-black text-gray-900">{{ total_rooms }}</div>
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-100 p-5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-emerald-50 text-emerald-600 rounded-md p-3 text-2xl">📜</div>
-                <div class="ml-5 w-0 flex-1">
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">Biểu giá đang áp dụng</dt>
-                        <dd class="text-base font-semibold text-gray-900 truncate">
-                            {% if active_config %}
-                                {{ active_config.name }}
-                            {% else %}
-                                <span class="text-red-500">Chưa kích hoạt</span>
-                            {% endif %}
-                        </dd>
-                    </dl>
+        <!-- Tổng hóa đơn -->
+        <div class="stat-card">
+            <div class="stat-icon bg-emerald-50 text-emerald-600">🧾</div>
+            <div class="flex-1 min-w-0">
+                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Hóa đơn phát hành</div>
+                <div class="mt-1 text-2xl font-black text-gray-900">{{ total_invoices }}</div>
+            </div>
+        </div>
+
+        <!-- Cảnh báo thu vượt -->
+        <div class="stat-card {% if overcharge_count > 0 %}border-red-300 bg-red-50/40{% endif %}">
+            <div class="stat-icon {% if overcharge_count > 0 %}bg-red-100 text-red-600{% else %}bg-green-100 text-green-600{% endif %}">
+                {% if overcharge_count > 0 %}⚠️{% else %}✅{% endif %}
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Cảnh báo thu vượt</div>
+                <div class="mt-1 text-2xl font-black {% if overcharge_count > 0 %}text-red-600{% else %}text-green-700{% endif %}">
+                    {{ overcharge_count }}
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Danh sách cơ sở nhanh -->
-    <div class="bg-white shadow rounded-lg border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 class="text-lg font-bold text-gray-900">Danh sách các cơ sở</h2>
-            <a href="/properties" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Xem tất cả &rarr;</a>
+    <!-- BANNER CẢNH BÁO PHÁP LÝ (DẤU CHẤM THAN CÓ KHOẢNG CÁCH, GIÃN DÒNG THOÁNG) -->
+    {% if overcharge_count > 0 %}
+    <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl shadow-sm my-6" style="line-height: 1.6;">
+        <div class="flex items-start" style="gap: 16px;">
+            <div class="flex-shrink-0 text-red-600 font-bold text-2xl" style="padding-top: 2px;">⚠️</div>
+            <div class="text-xs text-red-900 space-y-2 flex-1" style="line-height: 1.65;">
+                <p class="font-bold text-sm text-red-800">CẢNH BÁO PHÁP LÝ: PHÁT HIỆN {{ overcharge_count }} HÓA ĐƠN THU TIỀN CAO HƠN QUY ĐỊNH NHÀ NƯỚC!</p>
+                <p>Theo <strong>Điều 31 Nghị định số 133/2026/NĐ-CP</strong>, hành vi thu tiền điện nước cao hơn quy chuẩn sẽ bị xử phạt từ <strong>20.000.000 đ đến 30.000.000 đ</strong>.</p>
+                <div class="pt-3 border-t border-red-200/80">
+                    <span class="font-bold text-red-950">Các hóa đơn vi phạm cần xử lý ngay:</span>
+                    <ul class="mt-2 space-y-1.5 font-mono">
+                        {% for bad_inv in overcharge_invoices %}
+                        <li>
+                            <a href="/invoices/{{ bad_inv.id }}" class="inline-flex items-center text-red-700 hover:text-red-950 font-bold underline hover:no-underline">
+                                &bull; Hóa đơn #{{ bad_inv.id }} ({% if bad_inv.room.name.startswith('Phòng') %}{{ bad_inv.room.name }}{% else %}Phòng {{ bad_inv.room.name }}{% endif %} - Tháng {{ bad_inv.month }}): Thu vượt +{{ bad_inv.difference|vnd }} đ &rarr;
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="divide-y divide-gray-200">
-            {% if properties %}
-                {% for prop in properties %}
-                <div class="p-6 flex items-center justify-between hover:bg-gray-50 transition">
-                    <div>
-                        <a href="/properties/{{ prop.id }}" class="text-base font-semibold text-indigo-600 hover:underline">{{ prop.name }}</a>
-                        <p class="text-sm text-gray-500 mt-0.5">{{ prop.address or "Chưa có địa chỉ" }}</p>
-                    </div>
-                    <div class="flex items-center space-x-4 text-sm text-gray-500">
-                        <span>{{ prop.rooms|length }} phòng</span>
-                        <a href="/properties/{{ prop.id }}" class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition">Quản lý</a>
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="p-8 text-center text-gray-500">
-                    Chưa có cơ sở nào. Hãy bấm <a href="/properties/new" class="text-indigo-600 font-semibold underline">Thêm cơ sở mới</a> để bắt đầu!
-                </div>
-            {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- BẢNG 5 HÓA ĐƠN GẦN NHẤT -->
+    <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/70">
+            <h2 class="text-base font-bold text-gray-800">5 hóa đơn phát hành gần nhất</h2>
+            <a href="/invoices" class="text-xs font-semibold text-indigo-600 hover:text-indigo-900">Xem tất cả hóa đơn &rarr;</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-semibold text-gray-600">Mã / Kỳ</th>
+                        <th class="px-6 py-3 text-left font-semibold text-gray-600">Phòng</th>
+                        <th class="px-6 py-3 text-right font-semibold text-gray-600">Tiền điện</th>
+                        <th class="px-6 py-3 text-right font-semibold text-gray-600">Tiền nước</th>
+                        <th class="px-6 py-3 text-right font-semibold text-gray-600">Tổng quy định</th>
+                        <th class="px-6 py-3 text-center font-semibold text-gray-600">Đối chiếu thực thu</th>
+                        <th class="px-6 py-3 text-right font-semibold text-gray-600">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                    {% for inv in recent_invoices %}
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 font-mono font-medium text-indigo-600 whitespace-nowrap">#{{ inv.id }} ({{ inv.month }})</td>
+                        <td class="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">{{ inv.room.name }}</td>
+                        <td class="px-6 py-4 text-right font-mono whitespace-nowrap">{{ inv.electricity_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono whitespace-nowrap">{{ inv.water_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono font-bold text-indigo-700 whitespace-nowrap">{{ inv.invoice_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                            {% if inv.difference is not none %}
+                                {% if inv.difference > 0 %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Thu vượt +{{ inv.difference|vnd }} đ</span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Đúng quy chuẩn</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-gray-100 text-gray-500">Chưa đối chiếu</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-right whitespace-nowrap">
+                            <!-- NÚT CHI TIẾT VÀ PDF CÓ KHOẢNG CÁCH RÕ RÀNG -->
+                            <div class="action-btn-group">
+                                <a href="/invoices/{{ inv.id }}" class="mini-btn mini-btn-primary">
+                                    Chi tiết
+                                </a>
+                                <a href="/invoices/{{ inv.id }}/pdf" class="mini-btn mini-btn-secondary">
+                                    📄 PDF
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-gray-400">Chưa có hóa đơn nào được phát hành.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
