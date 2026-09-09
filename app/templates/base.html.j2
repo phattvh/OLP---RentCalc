@@ -8,22 +8,26 @@
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col text-gray-900 antialiased font-sans">
+    <!-- Header tối ưu co giãn cho cả Mobile & Desktop -->
     <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center space-x-3">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:h-16 py-3 sm:py-0 items-center space-y-2 sm:space-y-0">
+                <!-- Logo & Version badge -->
+                <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
                     <a href="/" class="flex items-center space-x-2 font-black text-xl tracking-tight hover:text-indigo-100 transition">
                         <span class="bg-white text-indigo-700 rounded-lg p-1.5 font-mono shadow-sm">⚡💧</span>
                         <span>RentCalc</span>
                     </a>
-                    <span class="hidden sm:inline-block px-2 py-0.5 text-xs bg-indigo-800 text-indigo-200 rounded font-mono">v0.2.0</span>
+                    <span class="px-2 py-0.5 text-xs bg-indigo-800 text-indigo-200 rounded font-mono font-semibold">v0.3.0</span>
                 </div>
-                <nav class="flex items-center space-x-1 sm:space-x-4 text-sm font-medium">
-                    <a href="/" class="px-3 py-2 rounded-md hover:bg-indigo-600 transition">Tổng quan</a>
-                    <a href="/properties" class="px-3 py-2 rounded-md hover:bg-indigo-600 transition">Cơ sở & Phòng</a>
-                    <a href="/invoices" class="px-3 py-2 rounded-md hover:bg-indigo-600 transition">Hóa đơn</a>
-                    <a href="/admin/configs" class="px-3 py-2 rounded-md hover:bg-indigo-600 transition">Cấu hình biểu giá</a>
-                    <a href="/login" class="ml-2 px-3 py-1.5 bg-indigo-800 hover:bg-indigo-900 text-indigo-100 rounded-md transition text-xs flex items-center space-x-1">
+
+                <!-- Navigation cuộn ngang mượt mà trên màn hình nhỏ -->
+                <nav class="flex items-center space-x-1 sm:space-x-3 text-xs sm:text-sm font-medium overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+                    <a href="/" class="px-2.5 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Tổng quan</a>
+                    <a href="/properties" class="px-2.5 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Cơ sở & Phòng</a>
+                    <a href="/invoices" class="px-2.5 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Hóa đơn</a>
+                    <a href="/admin/configs" class="px-2.5 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Biểu giá</a>
+                    <a href="/login" class="ml-1 px-3 py-1.5 bg-indigo-800 hover:bg-indigo-900 text-indigo-100 rounded-md transition font-semibold whitespace-nowrap flex items-center space-x-1">
                         <span>👤</span>
                         <span>Đăng nhập</span>
                     </a>
@@ -32,11 +36,11 @@
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-white border-t border-gray-200 py-6 text-center text-xs text-gray-500">
+    <footer class="bg-white border-t border-gray-200 py-6 text-center text-xs text-gray-500 px-4">
         <p>RentCalc — Minh bạch chi phí thiết yếu theo QĐ 1279/QĐ-BCT, TT 60/2025/TT-BCT & NĐ 133/2026/NĐ-CP.</p>
         <p class="mt-1">Giấy phép mã nguồn mở MIT. Copyright &copy; 2026 Phat Tran Vu Hoa.</p>
     </footer>
