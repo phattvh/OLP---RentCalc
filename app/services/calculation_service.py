@@ -28,8 +28,15 @@ class CalculationService:
         self.meter_repo = MeterReadingRepository(session)
         self.invoice_repo = InvoiceRepository(session)
 
-    def generate_invoice(self, room_id: int, month: str) -> Invoice:
-        """Tạo hoặc tính lại hóa đơn cho một phòng trong tháng chỉ định."""
+    def generate_invoice(
+        self, room_id: int, month: str, force_recalculate: bool = False
+    ) -> Invoice:
+        """Tạo mới hoặc bảo toàn snapshot hóa đơn đã phát hành cho một phòng trong tháng chỉ định."""
+        existing = self.invoice_repo.get_by_room_and_month(room_id, month)
+        if existing and not force_recalculate:
+            # Bảo toàn nguyên vẹn snapshot và biểu giá lịch sử đã chốt, không ghi đè khi đổi tariff
+            return existing
+
         room = self.room_repo.get(room_id)
         if not room:
             raise ValueError(f"Không tìm thấy phòng với ID {room_id}")

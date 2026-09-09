@@ -29,6 +29,7 @@ POSTGRES_DB=rentcalc
 POSTGRES_USER=rentcalc_admin
 POSTGRES_PASSWORD=MatKhauBaoMatChongDoan123!
 DATABASE_URL=postgresql+psycopg://rentcalc_admin:MatKhauBaoMatChongDoan123!@db:5432/rentcalc
+SECRET_KEY=ChuoiBiMatBaoMatChongDoanNgauNhien123!@#
 ENV=production
 ```
 
@@ -83,9 +84,9 @@ content-type: application/json
 ## 6. Sao lưu và Khôi phục dữ liệu (Backup & Restore)
 
 ```bash
-# Sao lưu cơ sở dữ liệu PostgreSQL
-docker exec -t olp---rentcalc-db-1 pg_dump -U rentcalc rentcalc > backup_$(date +%Y%m%d).sql
+# Sao lưu cơ sở dữ liệu PostgreSQL (chạy trực tiếp qua docker compose)
+docker compose -f docker-compose.prod.yml exec -T db pg_dump -U rentcalc_admin rentcalc > backup_$(date +%Y%m%d).sql
 
 # Khôi phục cơ sở dữ liệu
-cat backup_20260912.sql | docker exec -i olp---rentcalc-db-1 psql -U rentcalc -d rentcalc
+cat backup_20260909.sql | docker compose -f docker-compose.prod.yml exec -T db psql -U rentcalc_admin -d rentcalc
 ```

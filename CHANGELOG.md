@@ -2,7 +2,7 @@
 
 Định dạng theo [Keep a Changelog](https://keepachangelog.com/vi/1.0.0/), phiên bản theo [Semantic Versioning](https://semver.org/lang/vi/).
 
-## [1.0.0] - 2026-09-12
+## [1.0.0] - 2026-09-09
 
 ### Added
 
@@ -11,6 +11,8 @@
 - **Cấu hình triển khai Production hoàn chỉnh:** Cung cấp `docker-compose.prod.yml`, cấu hình Nginx Reverse Proxy (`nginx.conf`), và tài liệu hướng dẫn vận hành chi tiết tại `docs/DEPLOY.md`.
 - **Trạng thái xác thực động trên Navbar:** Hiển thị danh tính người dùng đăng nhập (`Chủ trọ` / `Khách`), liên kết truy cập nhanh "Hóa đơn của tôi" cho người thuê, và nút "Đăng xuất" an toàn.
 - **Endpoint kiểm tra sức khỏe hệ thống:** Route `/health` chuẩn hóa phục vụ giám sát container Docker và pipeline CI/CD.
+- **Bảo mật xác thực & Bất biến hóa đơn:** Ký cookie bằng HMAC-SHA256 với secret nạp từ môi trường, bảo toàn nguyên vẹn snapshot và biểu giá hóa đơn lịch sử (immutability).
+- **Khả năng cấu hình toàn diện:** Cho phép tùy biến toàn bộ ngưỡng định mức từng bậc điện cơ sở (kWh) và giới hạn quay vòng công tơ (max meter) trực tiếp từ giao diện quản trị.
 
 ### Changed
 
@@ -20,7 +22,7 @@
 
 ### Tests
 
-- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404, trạng thái xác thực Navbar và các ca kiểm thử biên (edge-cases) bậc thang điện: **54/54 tests pass 100%**, Code Coverage đạt **85%**.
+- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404, trạng thái xác thực Navbar, bảo mật signed cookie HMAC, phân quyền RBAC và các ca kiểm thử biên (edge-cases) bậc thang điện: **56/56 tests pass 100%**, Code Coverage đạt **85%**.
 - Hoàn thành diễn tập chạy thử (dry-run) toàn bộ 7 ca kiểm thử chính thức của đề thi mà không có bất kỳ sai số nào.
 
 ---

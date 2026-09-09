@@ -9,21 +9,26 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rentcalc_secret}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rentcalc} -d ${POSTGRES_DB:-rentcalc}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     restart: unless-stopped
 
   web:
     build: .
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-rentcalc}:${POSTGRES_PASSWORD:-rentcalc_secret}@db:5432/${POSTGRES_DB:-rentcalc}
-      SECRET_KEY: ${SECRET_KEY:-rentcalc-production-secret-key-olp2026}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required in production}
       ENV: production
     ports:
       - "8000:8000"
     command: >
       sh -c "alembic upgrade head && 
-             python -m scripts.seed &&
              uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4"
     restart: unless-stopped
 

@@ -51,11 +51,14 @@ def list_invoices(
 def generate_invoice(
     room_id: int = Form(...),
     month: str = Form(...),
+    recalculate: bool = Form(False),
     _: User = Depends(require_owner),
     db: Session = Depends(get_db),
 ):
     service = CalculationService(db)
-    invoice = service.generate_invoice(room_id=room_id, month=month.strip())
+    invoice = service.generate_invoice(
+        room_id=room_id, month=month.strip(), force_recalculate=recalculate
+    )
     return RedirectResponse(f"/invoices/{invoice.id}", status_code=303)
 
 
