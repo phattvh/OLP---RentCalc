@@ -28,12 +28,11 @@
 - ✅ **Task 01: Core Calculation Engine (`v0.1.0`)** — Hoàn thành (33/33 tests pass, 96% coverage).
 - ✅ **Task 02: Database + Web Layer + CRUD (`v0.2.0`)** — Hoàn thành (PostgreSQL, FastAPI, CRUD, Snapshot).
 - ✅ **Task 03: Advanced Features + UI Polish + Public Page (`v0.3.0`)** — Hoàn thành (Public share, Unicode PDF, RBAC Auth, Rollover warning, Dashboard alert).
-- ✅ **Task 04: Final Polish + Presentation + Production Release (`v1.0.0`)** — Hoàn thành:
+- ✅ **Task 04: Final Polish + Production Release (`v1.0.0`)** — Hoàn thành:
   - Khả năng tiếp cận: Chuẩn ARIA (`aria-label`, `role="alert"`), skip-link hỗ trợ đọc màn hình.
   - Tối ưu hiệu năng: Minify CSS Tailwind, endpoint kiểm tra sức khỏe `/health`.
   - Xử lý lỗi giao diện tùy biến: Trang 404 & 500, trạng thái xác thực động và nút Đăng xuất trên Navbar.
   - Sẵn sàng triển khai Production: `docker-compose.prod.yml`, `nginx.conf`, hướng dẫn [docs/DEPLOY.md](docs/DEPLOY.md).
-  - Tài liệu bảo vệ đề tài: Bộ 15 slide [docs/PRESENTATION.md](docs/PRESENTATION.md) và kịch bản diễn tập 15 phút chi tiết từng giây [docs/REHEARSAL.md](docs/REHEARSAL.md).
   - Kiểm thử tự động: **51/51 tests pass (100%)**, Coverage **85%**.
 
 ---
@@ -58,13 +57,11 @@ Truy cập: **http://localhost:8000**
 
 ---
 
-## Tài liệu dự án & Trình diễn
+## Tài liệu kỹ thuật dự án
 
 - Hướng dẫn cài đặt sạch: [docs/INSTALL.md](docs/INSTALL.md)
 - Hướng dẫn triển khai Production: [docs/DEPLOY.md](docs/DEPLOY.md)
 - Kịch bản demo 7 trường hợp kiểm thử: [docs/DEMO.md](docs/DEMO.md)
-- Bộ slide thuyết trình 15 phút: [docs/PRESENTATION.md](docs/PRESENTATION.md)
-- Kịch bản diễn tập từng giây: [docs/REHEARSAL.md](docs/REHEARSAL.md)
 - Lịch sử thay đổi các phiên bản: [CHANGELOG.md](CHANGELOG.md)
 - Danh mục giấy phép thư viện bên thứ ba: [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md)
 

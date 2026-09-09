@@ -9,7 +9,6 @@
 - **Hoàn thiện khả năng tiếp cận (Accessibility - a11y):** Tích hợp đầy đủ các thuộc tính WCAG/ARIA (`aria-label`, `aria-live="polite"`, `role="alert"`), nút skip-link "Bỏ qua menu điều hướng" cho người dùng bàn phím hoặc đọc màn hình.
 - **Trang báo lỗi giao diện tùy biến (Custom Error Pages):** Bổ sung trang lỗi 404 ("Không tìm thấy trang") và 500 ("Lỗi máy chủ nội bộ") đồng bộ với nhận diện thương hiệu RentCalc.
 - **Cấu hình triển khai Production hoàn chỉnh:** Cung cấp `docker-compose.prod.yml`, cấu hình Nginx Reverse Proxy (`nginx.conf`), và tài liệu hướng dẫn vận hành chi tiết tại `docs/DEPLOY.md`.
-- **Tài liệu trình diễn & Kịch bản diễn tập:** Soạn thảo bộ 15 slide thuyết trình (`docs/PRESENTATION.md`) và kịch bản diễn tập chi tiết từng giây cho 15 phút bảo vệ đề tài trước Ban Giám Khảo (`docs/REHEARSAL.md`).
 - **Trạng thái xác thực động trên Navbar:** Hiển thị danh tính người dùng đăng nhập (`Chủ trọ` / `Khách`), liên kết truy cập nhanh "Hóa đơn của tôi" cho người thuê, và nút "Đăng xuất" an toàn.
 - **Endpoint kiểm tra sức khỏe hệ thống:** Route `/health` chuẩn hóa phục vụ giám sát container Docker và pipeline CI/CD.
 
