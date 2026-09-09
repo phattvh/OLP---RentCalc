@@ -191,3 +191,20 @@ class Invoice(Base):
     tariff_config: Mapped["TariffConfig"] = relationship(
         back_populates="invoices", init=False
     )
+    
+class User(Base):
+    """Tài khoản người dùng (chủ nhà hoặc người thuê)."""
+
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True, init=False)
+    username: Mapped[str] = mapped_column(String(100), unique=True)
+    password_hash: Mapped[str] = mapped_column(String(255))
+    role: Mapped[str] = mapped_column(String(20))  # 'owner' | 'tenant'
+    room_id: Mapped[int | None] = mapped_column(ForeignKey("rooms.id"), default=None)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default_factory=utc_now, init=False
+    )
+
+    room: Mapped["Room | None"] = relationship(init=False)
