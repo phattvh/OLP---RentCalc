@@ -26,38 +26,38 @@
             <table class="min-w-full divide-y divide-gray-200 text-sm">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left font-medium text-gray-500">Kỳ thanh toán</th>
-                        <th class="px-6 py-3 text-right font-medium text-gray-500">Tiền điện (VNĐ)</th>
-                        <th class="px-6 py-3 text-right font-medium text-gray-500">Tiền nước (VNĐ)</th>
-                        <th class="px-6 py-3 text-right font-bold text-gray-900">Tổng quy định (VNĐ)</th>
-                        <th class="px-6 py-3 text-right font-medium text-gray-500">Chủ trọ thu</th>
-                        <th class="px-6 py-3 text-center font-medium text-gray-500">Đối chiếu pháp lý</th>
-                        <th class="px-6 py-3 text-right font-medium text-gray-500">Thao tác</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-500 whitespace-nowrap">Kỳ thanh toán</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500 whitespace-nowrap">Tiền điện (VNĐ)</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500 whitespace-nowrap">Tiền nước (VNĐ)</th>
+                        <th class="px-6 py-3 text-right font-bold text-gray-900 whitespace-nowrap">Tổng quy định (VNĐ)</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500 whitespace-nowrap">Chủ trọ thu</th>
+                        <th class="px-6 py-3 text-center font-medium text-gray-500 whitespace-nowrap">Đối chiếu pháp lý</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500 whitespace-nowrap">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     {% for inv in invoices %}
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 font-mono font-bold text-indigo-600">Tháng {{ inv.month }}</td>
-                        <td class="px-6 py-4 text-right font-mono">{{ inv.electricity_total_final|vnd }} đ</td>
-                        <td class="px-6 py-4 text-right font-mono">{{ inv.water_total_final|vnd }} đ</td>
-                        <td class="px-6 py-4 text-right font-mono font-bold text-indigo-700">{{ inv.invoice_total_final|vnd }} đ</td>
-                        <td class="px-6 py-4 text-right font-mono">
+                        <td class="px-6 py-4 font-mono font-bold text-indigo-600 whitespace-nowrap">Tháng {{ inv.month }}</td>
+                        <td class="px-6 py-4 text-right font-mono whitespace-nowrap">{{ inv.electricity_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono whitespace-nowrap">{{ inv.water_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono font-bold text-indigo-700 whitespace-nowrap">{{ inv.invoice_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono whitespace-nowrap">
                             {% if inv.actual_collected %}
                                 {{ inv.actual_collected|vnd }} đ
                             {% else %}
                                 <span class="text-gray-400">Chưa nhập</span>
                             {% endif %}
                         </td>
-                        <td class="px-6 py-4 text-center">
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
                             {% if inv.difference is not none %}
                                 {% if inv.difference > 0 %}
-                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-bold">Thu vượt +{{ inv.difference|vnd }} đ</span>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap bg-red-100 text-red-800">Thu vượt +{{ inv.difference|vnd }} đ</span>
                                 {% else %}
-                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-bold">Đúng quy định</span>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap bg-green-100 text-green-800">Đúng quy định</span>
                                 {% endif %}
                             {% else %}
-                                <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">Chưa đối chiếu</span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">Chưa đối chiếu</span>
                             {% endif %}
                         </td>
                         <td class="px-6 py-4 text-right whitespace-nowrap">
