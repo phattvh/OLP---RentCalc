@@ -1,7 +1,7 @@
 # RentCalc - Minh Bạch Hóa Chi Phí Dịch Vụ Thiết Yếu Nhà Trọ
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![Tests](https://img.shields.io/badge/tests-51%2F51%20passed-success.svg)
+![Tests](https://img.shields.io/badge/tests-54%2F54%20passed-success.svg)
 ![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
@@ -15,11 +15,14 @@
 
 **RentCalc** là ứng dụng web mã nguồn mở giúp minh bạch hóa chi phí điện và nước sinh hoạt tại các khu nhà trọ, bảo vệ quyền lợi hợp pháp của sinh viên và người thuê trọ theo chuẩn quy chuẩn pháp luật Việt Nam.
 
-### Căn cứ pháp lý áp dụng:
+### Quy tắc tính toán & Căn cứ pháp lý:
 
-- **Quyết định 2741/QĐ-BCT & QĐ 1279/QĐ-BCT:** Biểu giá bán lẻ điện sinh hoạt 6 bậc thang lũy tiến.
-- **Thông tư 60/2025/TT-BCT:** Cơ chế tính định mức sử dụng điện cho người thuê trọ (4 người = 1 định mức hộ gia đình) và áp giá Bậc 3 khi chưa kê khai tạm trú.
-- **Nghị định 133/2026/NĐ-CP (Điều 31):** Chế tài xử phạt vi phạm hành chính từ 20.000.000 đ đến 30.000.000 đ khi chủ trọ thu tiền điện nước cao hơn quy định.
+- **Quy tắc tính toán cuộc thi:** Triển khai chính xác theo các giá trị và quy tắc ấn định trong đề thi Olympic Tin học Sinh viên 2026 — Khối Phần mềm Nguồn mở (PMNM).
+- **Căn cứ pháp lý áp dụng theo đề bài:**
+  - **Quyết định 1279/QĐ-BCT:** Biểu giá bán lẻ điện sinh hoạt 6 bậc thang lũy tiến.
+  - **Thông tư 60/2025/TT-BCT:** Cơ chế tính định mức sử dụng điện cho người thuê trọ (4 người = 1 định mức hộ gia đình) và áp giá Bậc 3 khi chưa kê khai tạm trú.
+  - **Nghị định 133/2026/NĐ-CP (Điều 31):** Chế tài xử phạt vi phạm hành chính từ 20.000.000 đ đến 30.000.000 đ khi chủ trọ thu tiền điện nước cao hơn quy định.
+- **Tính linh hoạt:** Toàn bộ biểu giá, ngưỡng bậc, thuế suất và quy tắc định mức được cấu hình trực quan từ giao diện quản trị, không viết cứng (hard-code) trong mã nguồn.
 
 ---
 
@@ -33,7 +36,7 @@
   - Tối ưu hiệu năng: Minify CSS Tailwind, endpoint kiểm tra sức khỏe `/health`.
   - Xử lý lỗi giao diện tùy biến: Trang 404 & 500, trạng thái xác thực động và nút Đăng xuất trên Navbar.
   - Sẵn sàng triển khai Production: `docker-compose.prod.yml`, `nginx.conf`, hướng dẫn [docs/DEPLOY.md](docs/DEPLOY.md).
-  - Kiểm thử tự động: **51/51 tests pass (100%)**, Coverage **85%**.
+  - Kiểm thử tự động: **54/54 tests pass (100%)**, Coverage **85%**.
 
 ---
 

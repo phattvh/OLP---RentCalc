@@ -53,3 +53,37 @@ def test_quota_zero_all_fallback_to_last_tier(official_config):
 def test_negative_consumption_raises_error(official_config):
     with pytest.raises(InputError):
         calculate_tiered_electricity("-10", 4, official_config)
+
+
+def test_fractional_quota_five_people(official_config):
+    """5 người = 1.25 định mức (định mức bậc 1 là 50 * 1.25 = 62.5 kWh)."""
+    r = calculate_tiered_electricity("62.5", 5, official_config)
+    assert r.quota == D("1.25")
+    assert len(r.breakdown) == 1
+    assert r.breakdown[0].consumption == D("62.5")
+    assert r.subtotal == D("62.5") * D("1984")
+
+
+def test_single_kwh_consumption(official_config):
+    """Tiêu thụ tối thiểu 1 kWh."""
+    r1 = calculate_tiered_electricity("1", 4, official_config)
+    assert r1.consumption == D("1")
+    assert r1.breakdown[0].consumption == D("1")
+    assert r1.subtotal == D("1984")
+    # VAT 8%: 1984 * 0.08 = 158.72 -> total = 2142.72 -> round = 2143
+    assert r1.total_rounded == D("2143")
+
+
+def test_tier_boundaries_300_and_400(official_config):
+    """Kiểm tra ranh giới bậc 4 (300 kWh) và bậc 5 (400 kWh)."""
+    # 300 kWh: 50 + 50 + 100 + 100 = 4 bậc
+    r300 = calculate_tiered_electricity("300", 4, official_config)
+    assert len(r300.breakdown) == 4
+    assert r300.breakdown[3].consumption == D("100")
+    assert r300.breakdown[3].unit_price == D("2998")
+
+    # 400 kWh: 50 + 50 + 100 + 100 + 100 = 5 bậc
+    r400 = calculate_tiered_electricity("400", 4, official_config)
+    assert len(r400.breakdown) == 5
+    assert r400.breakdown[4].consumption == D("100")
+    assert r400.breakdown[4].unit_price == D("3350")

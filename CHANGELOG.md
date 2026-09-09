@@ -20,7 +20,7 @@
 
 ### Tests
 
-- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404 và trạng thái xác thực Navbar: **51/51 tests pass 100%**, Code Coverage đạt **85%**.
+- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404, trạng thái xác thực Navbar và các ca kiểm thử biên (edge-cases) bậc thang điện: **54/54 tests pass 100%**, Code Coverage đạt **85%**.
 - Hoàn thành diễn tập chạy thử (dry-run) toàn bộ 7 ca kiểm thử chính thức của đề thi mà không có bất kỳ sai số nào.
 
 ---

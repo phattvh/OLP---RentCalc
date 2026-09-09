@@ -1,6 +1,6 @@
-# Kịch bản Demo Kiểm Thử Hệ Thống RentCalc (v0.3.0)
+# Judge Demo Guide — Hướng Dẫn Trình Diễn Cho Ban Giám Khảo (v1.0.0)
 
-Tài liệu này hướng dẫn chi tiết các bước thao tác trên giao diện Web RentCalc để Ban Giám Khảo kiểm chứng tính đúng đắn, tính minh bạch pháp lý và các tính năng nâng cao.
+> **Lưu ý:** Tài liệu này được thiết kế riêng cho phiên bảo vệ sản phẩm 15 phút tại **Olympic Tin học Sinh viên 2026 — Khối Phần mềm Nguồn mở (PMNM)**. Tài liệu hướng dẫn chi tiết từng bước thao tác thực tế trên giao diện để Ban Giám Khảo kiểm chứng tính đúng đắn của giải thuật, tính minh bạch pháp lý và kiến trúc mở.
 
 ---
 
