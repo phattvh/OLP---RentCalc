@@ -6,6 +6,8 @@ from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from app.auth import get_current_user_optional, require_tenant, verify_password
+from app.db.repositories.invoice_repo import InvoiceRepository
 
 from app.auth import get_current_user_optional, verify_password
 from app.db.models import User
@@ -55,3 +57,22 @@ def logout():
     response = RedirectResponse("/login", status_code=303)
     response.delete_cookie("user_id")
     return response
+
+@router.get("/my-invoices", response_class=HTMLResponse)
+def my_invoices(
+    request: Request,
+    user: User = Depends(require_tenant),
+    db: Session = Depends(get_db),
+):
+    """Trang xem danh sách hóa đơn dành riêng cho Người thuê phòng."""
+    repo = InvoiceRepository(db)
+    invoices = repo.list_by_room(user.room_id) if user.room_id else []
+    
+    return templates.TemplateResponse(
+        request=request,
+        name="tenant/invoices.html.j2",
+        context={
+            "user": user,
+            "invoices": invoices,
+        },
+    )

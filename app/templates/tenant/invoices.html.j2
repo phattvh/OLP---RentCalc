@@ -1,0 +1,80 @@
+{% extends "base.html.j2" %}
+{% block title %}Hóa đơn của tôi - RentCalc{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-6xl mx-auto">
+    <!-- Header chào mừng người thuê -->
+    <div class="bg-indigo-700 text-white rounded-xl p-6 shadow-md flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold flex items-center space-x-2">
+                <span>🏠</span>
+                <span>Hóa đơn tiền phòng của bạn</span>
+            </h1>
+            <p class="text-sm text-indigo-200 mt-1">
+                Tài khoản: <strong class="font-mono text-white">{{ user.username }}</strong>
+                {% if user.room %} | Phòng: <strong>{{ user.room.name }}</strong> ({{ user.room.property.name }}){% endif %}
+            </p>
+        </div>
+        <a href="/logout" class="px-4 py-2 bg-indigo-800 hover:bg-indigo-900 text-indigo-100 rounded-md text-sm font-semibold transition">
+            Đăng xuất
+        </a>
+    </div>
+
+    <!-- Danh sách hóa đơn -->
+    <div class="bg-white shadow rounded-lg border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-medium text-gray-500">Kỳ thanh toán</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500">Tiền điện (VNĐ)</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500">Tiền nước (VNĐ)</th>
+                        <th class="px-6 py-3 text-right font-bold text-gray-900">Tổng quy định (VNĐ)</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500">Chủ trọ thu</th>
+                        <th class="px-6 py-3 text-center font-medium text-gray-500">Đối chiếu pháp lý</th>
+                        <th class="px-6 py-3 text-right font-medium text-gray-500">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for inv in invoices %}
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 font-mono font-bold text-indigo-600">Tháng {{ inv.month }}</td>
+                        <td class="px-6 py-4 text-right font-mono">{{ inv.electricity_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono">{{ inv.water_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono font-bold text-indigo-700">{{ inv.invoice_total_final|vnd }} đ</td>
+                        <td class="px-6 py-4 text-right font-mono">
+                            {% if inv.actual_collected %}
+                                {{ inv.actual_collected|vnd }} đ
+                            {% else %}
+                                <span class="text-gray-400">Chưa nhập</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            {% if inv.difference is not none %}
+                                {% if inv.difference > 0 %}
+                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-bold">Thu vượt +{{ inv.difference|vnd }} đ</span>
+                                {% else %}
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-bold">Đúng quy định</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">Chưa đối chiếu</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-right space-x-2">
+                            <a href="/share/{{ inv.share_token }}" target="_blank" class="text-indigo-600 hover:text-indigo-900 font-semibold">Xem chi tiết &rarr;</a>
+                            <a href="/invoices/{{ inv.id }}/pdf" class="text-gray-600 hover:text-gray-900">📄 PDF</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-gray-400">
+                            Chưa có hóa đơn nào được phát hành cho phòng của bạn.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
