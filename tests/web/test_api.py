@@ -68,6 +68,44 @@ def test_admin_configs_page():
     assert "Quản lý biểu giá" in res.text
 
 
+def test_create_custom_five_tier_config():
+    """Kiểm thử cấu hình biểu giá động 5 bậc từ UI (không bị giới hạn 6 bậc)."""
+    cookies = get_auth_cookies("owner")
+    res = client.post(
+        "/admin/configs",
+        data=[
+            ("name", "Biểu giá 5 bậc thử nghiệm"),
+            ("description", "Dự thảo biểu giá điện 5 bậc"),
+            ("vat_rate", "0.08"),
+            ("people_per_quota", "4"),
+            ("fallback_tier_number", "3"),
+            ("tier_qty", "100"),
+            ("tier_price", "1806"),
+            ("tier_name", "Bậc 1"),
+            ("tier_qty", "100"),
+            ("tier_price", "2167"),
+            ("tier_name", "Bậc 2"),
+            ("tier_qty", "200"),
+            ("tier_price", "2729"),
+            ("tier_name", "Bậc 3"),
+            ("tier_qty", "300"),
+            ("tier_price", "3250"),
+            ("tier_name", "Bậc 4"),
+            ("tier_qty", ""),
+            ("tier_price", "3611"),
+            ("tier_name", "Bậc 5"),
+            ("water_volume_price", "9000"),
+            ("water_person_price", "85000"),
+            ("water_vat", "0.05"),
+            ("water_env", "0.10"),
+            ("meter_max", "999999"),
+        ],
+        cookies=cookies,
+        follow_redirects=False,
+    )
+    assert res.status_code == 303
+
+
 def test_invoices_list_page():
     cookies = get_auth_cookies("owner")
     res = client.get("/invoices", cookies=cookies)
@@ -313,3 +351,24 @@ def test_navbar_auth_state():
     res_tenant_root = client.get("/", cookies={"user_id": sign_user_id(tenant.id)}, follow_redirects=False)
     assert res_tenant_root.status_code == 303
     assert res_tenant_root.headers["location"] == "/my-invoices"
+
+
+def test_invoice_snapshot_immutability():
+    """Kiểm thử tính bất biến của hóa đơn: bảo toàn snapshot lịch sử không bị ghi đè."""
+    db = SessionLocal()
+    room = db.query(Room).first()
+    assert room is not None
+    calc = CalculationService(db)
+
+    # 1. Sinh hóa đơn lần đầu cho tháng 2026-12
+    inv1 = calc.generate_invoice(room_id=room.id, month="2026-12")
+    inv1_id = inv1.id
+    inv1_total = inv1.invoice_total_final
+    inv1_tariff_id = inv1.tariff_config_id
+
+    # 2. Gọi lại không truyền force_recalculate -> trả về chính hóa đơn đã chốt
+    inv2 = calc.generate_invoice(room_id=room.id, month="2026-12")
+    assert inv2.id == inv1_id
+    assert inv2.invoice_total_final == inv1_total
+    assert inv2.tariff_config_id == inv1_tariff_id
+    db.close()

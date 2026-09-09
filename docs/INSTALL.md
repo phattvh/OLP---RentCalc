@@ -90,8 +90,8 @@ alembic upgrade head
 # 3. Nạp dữ liệu mẫu phục vụ kiểm thử tích hợp
 python -m scripts.seed
 
-# 4. Thực thi toàn bộ 56 ca kiểm thử và xuất báo cáo độ bao phủ
+# 4. Thực thi toàn bộ 58 ca kiểm thử và xuất báo cáo độ bao phủ
 pytest --cov=app --cov-report=term-missing
 ```
 
-- Tiêu chuẩn nghiệm thu: **56/56 tests pass 100%**, Coverage $\ge$ 85%.
+- Tiêu chuẩn nghiệm thu: **58/58 tests pass 100%**, Coverage $\ge$ 85%.

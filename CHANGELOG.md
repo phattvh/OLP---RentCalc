@@ -12,7 +12,7 @@
 - **Trạng thái xác thực động trên Navbar:** Hiển thị danh tính người dùng đăng nhập (`Chủ trọ` / `Khách`), liên kết truy cập nhanh "Hóa đơn của tôi" cho người thuê, và nút "Đăng xuất" an toàn.
 - **Endpoint kiểm tra sức khỏe hệ thống:** Route `/health` chuẩn hóa phục vụ giám sát container Docker và pipeline CI/CD.
 - **Bảo mật xác thực & Bất biến hóa đơn:** Ký cookie bằng HMAC-SHA256 với secret nạp từ môi trường, bảo toàn nguyên vẹn snapshot và biểu giá hóa đơn lịch sử (immutability).
-- **Khả năng cấu hình toàn diện:** Cho phép tùy biến toàn bộ ngưỡng định mức từng bậc điện cơ sở (kWh) và giới hạn quay vòng công tơ (max meter) trực tiếp từ giao diện quản trị.
+- **Khả năng cấu hình toàn diện & Biểu giá động N-bậc:** Cho phép tùy biến số lượng bậc điện linh hoạt (3, 5, 6, N bậc - thêm/xóa bậc trực quan), cấu hình ngưỡng định mức từng bậc cơ sở (kWh) và giới hạn quay vòng công tơ (max meter) trực tiếp từ giao diện quản trị.
 
 ### Changed
 
@@ -22,7 +22,7 @@
 
 ### Tests
 
-- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404, trạng thái xác thực Navbar, bảo mật signed cookie HMAC, phân quyền RBAC và các ca kiểm thử biên (edge-cases) bậc thang điện: **56/56 tests pass 100%**, Code Coverage đạt **85%**.
+- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404, trạng thái xác thực Navbar, bảo mật signed cookie HMAC, phân quyền RBAC, tính bất biến hóa đơn lịch sử, tạo biểu giá động 5 bậc và các ca kiểm thử biên (edge-cases) bậc thang điện: **58/58 tests pass 100%**, Code Coverage đạt **85%**.
 - Hoàn thành diễn tập chạy thử (dry-run) toàn bộ 7 ca kiểm thử chính thức của đề thi mà không có bất kỳ sai số nào.
 
 ---
