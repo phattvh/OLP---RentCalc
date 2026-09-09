@@ -17,6 +17,7 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-rentcalc}:${POSTGRES_PASSWORD:-rentcalc_secret}@db:5432/${POSTGRES_DB:-rentcalc}
+      SECRET_KEY: ${SECRET_KEY:-rentcalc-production-secret-key-olp2026}
       ENV: production
     ports:
       - "8000:8000"

@@ -78,9 +78,19 @@ Trang đăng xuất: **http://localhost:8000/logout**
 
 ## 4. Chạy bộ kiểm thử tự động (Automated Test Suite)
 
-Chạy kiểm thử toàn bộ dự án và đo lường độ bao phủ mã nguồn (Code Coverage):
+Quy trình chuẩn hóa để chạy kiểm thử trên máy sạch từ mã nguồn:
 
 ```bash
+# 1. Đảm bảo dịch vụ PostgreSQL đang chạy
+docker compose up -d db
+
+# 2. Cập nhật schema CSDL lên bản mới nhất
+alembic upgrade head
+
+# 3. Nạp dữ liệu mẫu phục vụ kiểm thử tích hợp
+python -m scripts.seed
+
+# 4. Thực thi toàn bộ 56 ca kiểm thử và xuất báo cáo độ bao phủ
 pytest --cov=app --cov-report=term-missing
 ```
 

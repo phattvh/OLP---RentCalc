@@ -8,9 +8,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://rentcalc:rentcalc@localhost:5432/rentcalc"
     env: str = "development"
-    secret_key: str = "rentcalc-secret-key-olp-2026-pm-nm"
+    secret_key: str = "rentcalc-insecure-dev-key-please-set-secret-key-in-env"
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
 
 settings = Settings()

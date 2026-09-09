@@ -22,8 +22,11 @@ Tất cả các thư viện dưới đây đã được rà soát giấy phép t
 | **alembic** | MIT License | Quản lý phiên bản Database Migrations |
 | **psycopg** | LGPL / BSD | Driver kết nối cơ sở dữ liệu PostgreSQL |
 | **pydantic** | MIT License | Xác thực dữ liệu và Schema Data Modeling |
+| **pydantic-settings** | MIT License | Nạp cấu hình ứng dụng và biến môi trường |
 | **jinja2** | BSD 3-Clause | Template Engine render giao diện HTML |
 | **httpx** | BSD 3-Clause | HTTP Client phục vụ kiểm thử tích hợp |
+| **python-multipart** | Apache License 2.0 | Xử lý dữ liệu Form POST đăng nhập & cấu hình |
+| **xhtml2pdf** | Apache License 2.0 | Xuất hóa đơn chuẩn định dạng PDF tiếng Việt Unicode |
 
 ---
 

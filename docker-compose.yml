@@ -21,6 +21,7 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql+psycopg://rentcalc:rentcalc@db:5432/rentcalc
+      SECRET_KEY: ${SECRET_KEY:-rentcalc-docker-secret-key-olp2026}
       ENV: production
     ports:
       - "8000:8000"

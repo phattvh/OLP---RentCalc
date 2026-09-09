@@ -19,22 +19,11 @@ try:
 except Exception:
     pass
 
-try:
-    from weasyprint import HTML
-    _HAS_WEASYPRINT = True
-except Exception:
-    _HAS_WEASYPRINT = False
+from xhtml2pdf import pisa
 
 
 def render_html_to_pdf(html_content: str) -> bytes:
-    """Render chuỗi HTML thành file PDF dạng bytes hỗ trợ chuẩn Unicode tiếng Việt."""
-    if _HAS_WEASYPRINT:
-        try:
-            return HTML(string=html_content).write_pdf()
-        except Exception:
-            pass
-
-    from xhtml2pdf import pisa
+    """Render chuỗi HTML thành file PDF dạng bytes hỗ trợ chuẩn Unicode tiếng Việt qua xhtml2pdf."""
     output = io.BytesIO()
     pisa.CreatePDF(html_content, dest=output, encoding="utf-8")
     return output.getvalue()
