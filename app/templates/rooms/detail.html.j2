@@ -19,7 +19,7 @@
             <a href="/rooms/{{ room.id }}/readings/new" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition">
                 + Nhập chỉ số công tơ
             </a>
-            <form action="/rooms/{{ room.id }}/delete" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phòng này?');">
+            <form action="/rooms/{{ room.id }}/delete" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phòng này và toàn bộ dữ liệu chỉ số, hóa đơn liên quan không?');">
                 <button type="submit" class="px-4 py-2 bg-red-50 text-red-600 text-sm font-medium rounded-md hover:bg-red-100 transition">Xóa phòng</button>
             </form>
         </div>

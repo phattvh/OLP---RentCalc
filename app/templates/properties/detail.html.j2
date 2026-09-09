@@ -15,7 +15,7 @@
             <a href="/properties/{{ property.id }}/rooms/new" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition">
                 + Thêm phòng
             </a>
-            <form action="/properties/{{ property.id }}/delete" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa cơ sở này?');">
+            <form action="/properties/{{ property.id }}/delete" method="POST" onsubmit="return confirm('CẢNH BÁO: Xóa cơ sở sẽ xóa toàn bộ phòng và dữ liệu hóa đơn liên quan. Bạn có chắc chắn không?');">
                 <button type="submit" class="px-4 py-2 bg-red-50 text-red-600 text-sm font-medium rounded-md hover:bg-red-100 transition">Xóa cơ sở</button>
             </form>
         </div>
