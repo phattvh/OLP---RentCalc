@@ -17,8 +17,8 @@ Dự án RentCalc được thiết kế để có thể cài đặt và triển 
 ### Bước 1: Clone mã nguồn và cài đặt môi trường
 
 ```bash
-git clone https://github.com/phattvh/RentCalc.git
-cd RentCalc
+git clone https://github.com/phattvh/OLP---RentCalc.git
+cd OLP---RentCalc
 
 # Tạo và kích hoạt môi trường ảo
 python -m venv .venv

@@ -11,22 +11,22 @@
 
 ---
 
-## 2. Dự kiến tích hợp từ Task 02 (Web & Database)
+## 2. Thư viện lõi hệ thống & Ứng dụng Web (Core & Web Layer)
 
-Tất cả các thư viện dưới đây đã được rà soát giấy phép trước khi đưa vào kiến trúc:
+Tất cả các thư viện dưới đây đã được tích hợp và hoạt động chính thức trong bản phát hành RentCalc `v1.0.0`:
 | Thư viện | Giấy phép (License) | Mục đích sử dụng |
 |---|---|---|
-| **fastapi** | MIT License | Web Framework API & Routing |
-| **uvicorn** | BSD 3-Clause | ASGI Web Server |
-| **sqlalchemy** | MIT License | Object Relational Mapper (ORM) |
-| **alembic** | MIT License | Quản lý phiên bản Database Migrations |
-| **psycopg** | LGPL / BSD | Driver kết nối cơ sở dữ liệu PostgreSQL |
-| **pydantic** | MIT License | Xác thực dữ liệu và Schema Data Modeling |
-| **pydantic-settings** | MIT License | Nạp cấu hình ứng dụng và biến môi trường |
-| **jinja2** | BSD 3-Clause | Template Engine render giao diện HTML |
-| **httpx** | BSD 3-Clause | HTTP Client phục vụ kiểm thử tích hợp |
-| **python-multipart** | Apache License 2.0 | Xử lý dữ liệu Form POST đăng nhập & cấu hình |
-| **xhtml2pdf** | Apache License 2.0 | Xuất hóa đơn chuẩn định dạng PDF tiếng Việt Unicode |
+| **fastapi** | MIT License | Web Framework API, Routing và Dependency Injection |
+| **uvicorn** | BSD 3-Clause | ASGI Web Server hiệu năng cao |
+| **sqlalchemy** | MIT License | Object Relational Mapper (ORM) và quản lý kết nối CSDL |
+| **alembic** | MIT License | Quản lý phiên bản Database Schema Migrations |
+| **psycopg** | LGPL / BSD | Driver kết nối chuẩn hóa cơ sở dữ liệu PostgreSQL 16 |
+| **pydantic** | MIT License | Xác thực dữ liệu và Data Modeling chặt chẽ |
+| **pydantic-settings** | MIT License | Nạp cấu hình ứng dụng từ biến môi trường (.env) |
+| **jinja2** | BSD 3-Clause | Template Engine render giao diện người dùng Server-Side |
+| **httpx** | BSD 3-Clause | HTTP Client phục vụ kiểm thử tích hợp Web API |
+| **python-multipart** | Apache License 2.0 | Xử lý dữ liệu biểu mẫu Form POST đăng nhập & cấu hình |
+| **xhtml2pdf** | Apache License 2.0 | Xuất hóa đơn chuẩn in ấn định dạng PDF tiếng Việt Unicode |
 
 ---
 
