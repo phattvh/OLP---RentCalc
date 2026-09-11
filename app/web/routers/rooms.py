@@ -36,6 +36,12 @@ def create_room(
     db: Session = Depends(get_db),
 ):
     repo = RoomRepository(db)
+    people_count = max(1, people_count)
+    if water_billing_mode not in ("volume", "per_person"):
+        water_billing_mode = "volume"
+    if water_people_count is not None:
+        water_people_count = max(0, water_people_count)
+
     room = Room(
         property_id=property_id,
         name=name.strip(),
@@ -43,7 +49,7 @@ def create_room(
         water_billing_mode=water_billing_mode,
         water_people_count=water_people_count,
         is_declared=is_declared,
-        notes=notes,
+        notes=notes.strip() if notes else None,
     )
     repo.create(room)
     return RedirectResponse(f"/properties/{property_id}", status_code=303)

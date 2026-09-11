@@ -29,14 +29,15 @@ class TariffConfigRepository:
     def get(self, config_id: int) -> TariffConfig | None:
         return self.session.get(TariffConfig, config_id)
 
-    def deactivate_all(self) -> None:
+    def deactivate_all(self, auto_commit: bool = True) -> None:
         stmt = update(TariffConfig).values(is_active=False)
         self.session.execute(stmt)
-        self.session.commit()
+        if auto_commit:
+            self.session.commit()
 
     def create(self, config: TariffConfig) -> TariffConfig:
         if config.is_active:
-            self.deactivate_all()
+            self.deactivate_all(auto_commit=False)
         self.session.add(config)
         self.session.commit()
         self.session.refresh(config)
@@ -46,7 +47,7 @@ class TariffConfigRepository:
         target = self.get(config_id)
         if not target:
             return None
-        self.deactivate_all()
+        self.deactivate_all(auto_commit=False)
         target.is_active = True
         self.session.commit()
         self.session.refresh(target)

@@ -29,7 +29,7 @@
    - Tổng cộng số tiền theo quy định: **425.644 đ**.
 5. **Đối chiếu thực thu:**
    - Nhập số tiền chủ nhà thu: `500000` $\rightarrow$ Nhấn **"Đối chiếu chênh lệch"**.
-   - Hệ thống hiển thị khung đỏ cảnh báo: **Thu vượt +74.356 đ** kèm mức phạt vi phạm 20.000.000 đ – 30.000.000 đ theo **Điều 31 Nghị định 133/2026/NĐ-CP**!
+   - Hệ thống hiển thị khung đỏ cảnh báo: **Thu vượt +74.356 đ** kèm mức phạt vi phạm 20.000.000 đ – 30.000.000 đ theo **khoản 7 Điều 13 Nghị định 133/2026/NĐ-CP**!
 
 ---
 
@@ -96,4 +96,4 @@
 1. Truy cập trang chủ: **http://localhost:8000**
 2. **Kiểm chứng Bảng điều khiển:**
    - 4 thẻ chỉ số thống kê (Cơ sở, Phòng đang quản lý, Hóa đơn phát hành, Cảnh báo thu vượt) hiển thị cân đối trên 1 hàng 4 cột.
-   - Nếu có hóa đơn thu vượt mức trần nhà nước, banner cảnh báo vi phạm pháp lý màu đỏ hiển thị nổi bật với biểu tượng tam giác chấm than ⚠️, viện dẫn chính xác **Điều 31 Nghị định 133/2026/NĐ-CP** và liên kết trực tiếp tới từng hóa đơn vi phạm để chủ trọ xử lý ngay.
+   - Nếu có hóa đơn thu vượt mức trần nhà nước, banner cảnh báo vi phạm pháp lý màu đỏ hiển thị nổi bật với biểu tượng tam giác chấm than ⚠️, viện dẫn chính xác **khoản 7 Điều 13 Nghị định 133/2026/NĐ-CP** và liên kết trực tiếp tới từng hóa đơn vi phạm để chủ trọ xử lý ngay.

@@ -15,7 +15,7 @@ nghiệm thu và đối chiếu khi quy định pháp luật thay đổi.
 | Quyết định 1279/QĐ-BCT   | 09/5/2025     | 10/5/2025          | Biểu giá điện sinh hoạt 6 bậc                           |
 | Thông tư 60/2025/TT-BCT  | 2025          | 02/12/2025         | Định mức theo số người thuê; áp bậc 3 khi không kê khai |
 | Nghị quyết 204/2025/QH15 | 2025          | đến hết 31/12/2026 | VAT điện sinh hoạt 8%                                   |
-| Nghị định 133/2026/NĐ-CP | 2026          | 25/5/2026          | Xử phạt 20–30 triệu hành vi thu vượt, kèm hoàn trả      |
+| Nghị định 133/2026/NĐ-CP | 2026          | 25/5/2026          | Khoản 7 & 11 Điều 13: Xử phạt 20–30 triệu thu tiền điện vượt, kèm hoàn trả |
 
 ## 3. Nguyên tắc cấu hình
 

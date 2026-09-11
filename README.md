@@ -21,7 +21,7 @@
 - **Căn cứ pháp lý áp dụng theo đề bài:**
   - **Quyết định 1279/QĐ-BCT:** Biểu giá bán lẻ điện sinh hoạt 6 bậc thang lũy tiến.
   - **Thông tư 60/2025/TT-BCT:** Cơ chế tính định mức sử dụng điện cho người thuê trọ (4 người = 1 định mức hộ gia đình) và áp giá Bậc 3 khi chưa kê khai tạm trú.
-  - **Nghị định 133/2026/NĐ-CP (Điều 31):** Chế tài xử phạt vi phạm hành chính từ 20.000.000 đ đến 30.000.000 đ khi chủ trọ thu tiền điện nước cao hơn quy định.
+  - **Nghị định 133/2026/NĐ-CP (khoản 7 & 11 Điều 13):** Chế tài xử phạt vi phạm hành chính từ 20.000.000 đ đến 30.000.000 đ đối với hành vi thu tiền điện của người thuê cao hơn quy định và buộc hoàn trả tiền thu chênh lệch.
 - **Tính linh hoạt:** Toàn bộ biểu giá, số lượng bậc động (3, 5, 6, N bậc), ngưỡng bậc, thuế suất và quy tắc định mức được cấu hình trực quan từ giao diện quản trị, không viết cứng (hard-code) trong mã nguồn.
 
 ---

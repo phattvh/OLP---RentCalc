@@ -37,7 +37,7 @@
 - **Xuất hóa đơn PDF chuẩn in ấn:** Tích hợp dịch vụ xuất file PDF chính thức hỗ trợ 100% Unicode tiếng Việt có dấu, căn lề chuẩn xác, có khu vực chữ ký xác nhận của hai bên.
 - **Xác thực & Phân quyền (Role-Based Access):** Phân định hai vai trò Chủ nhà (`owner`) và Khách thuê (`tenant`) thông qua Cookie xác thực an toàn; người thuê tự động điều hướng về trang hóa đơn cá nhân (`/my-invoices`).
 - **Cảnh báo công tơ quay vòng (Rollover Warning):** Hiển thị cảnh báo trực quan trên form nhập số công tơ khi chỉ số mới nhỏ hơn chỉ số cũ, tự động kích hoạt thuật toán bù quay vòng.
-- **Bảng điều khiển quản trị (Dashboard):** 4 thẻ thống kê tổng quan (cơ sở, phòng, hóa đơn, cảnh báo thu vượt) và banner cảnh báo chế tài xử phạt theo Điều 31 Nghị định 133/2026/NĐ-CP.
+- **Bảng điều khiển quản trị (Dashboard):** 4 thẻ thống kê tổng quan (cơ sở, phòng, hóa đơn, cảnh báo thu vượt) và banner cảnh báo chế tài xử phạt theo khoản 7 Điều 13 Nghị định 133/2026/NĐ-CP.
 - **Xác thực biểu mẫu Client-side & Tối ưu Mobile:** Kiểm tra logic nhập liệu ngay trên trình duyệt, giao diện co giãn mượt mà trên mọi độ phân giải.
 - **Dữ liệu tài khoản Demo:** Bổ sung tài khoản mẫu `owner` (`owner123`) và `tenant101` (`tenant123`) trong `scripts/seed.py`.
 
