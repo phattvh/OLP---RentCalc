@@ -11,6 +11,7 @@ from app.core.electricity import (
     calculate_tiered_electricity,
 )
 from app.core.water import calculate_water
+from app.core.month import validate_month
 from app.db.models import Invoice
 from app.db.repositories.invoice_repo import InvoiceRepository
 from app.db.repositories.meter_reading_repo import MeterReadingRepository
@@ -32,6 +33,7 @@ class CalculationService:
         self, room_id: int, month: str, force_recalculate: bool = False
     ) -> Invoice:
         """Tạo mới hoặc bảo toàn snapshot hóa đơn đã phát hành cho một phòng trong tháng chỉ định."""
+        month = validate_month(month)
         existing = self.invoice_repo.get_by_room_and_month(room_id, month)
         if existing and not force_recalculate:
             # Bảo toàn nguyên vẹn snapshot và biểu giá lịch sử đã chốt, không ghi đè khi đổi tariff

@@ -5,6 +5,7 @@
 from sqlalchemy.orm import Session
 
 from app.core.meter import calculate_consumption
+from app.core.month import validate_month
 from app.db.models import MeterReading
 from app.db.repositories.meter_reading_repo import MeterReadingRepository
 from app.services.config_service import ConfigService
@@ -28,6 +29,7 @@ class MeterService:
         notes: str | None = None,
     ) -> MeterReading:
         """Validate chỉ số và tính consumption bằng app.core.meter."""
+        month = validate_month(month)
         core_config, _ = self.config_service.get_active_config()
         max_val = core_config.meter.max_value
 

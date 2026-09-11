@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
 from app.auth import require_owner
+from app.core.month import validate_month
 from app.db.repositories.room_repo import RoomRepository
 from app.db.session import get_db
 from app.services.meter_service import MeterService
@@ -33,10 +34,11 @@ def record_reading(
     notes: str = Form(None),
     db: Session = Depends(get_db),
 ):
+    valid_month = validate_month(month)
     service = MeterService(db)
     service.record_reading(
         room_id=room_id,
-        month=month.strip(),
+        month=valid_month,
         meter_type=meter_type.strip(),
         start_reading=start_reading.strip(),
         end_reading=end_reading.strip(),

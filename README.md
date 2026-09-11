@@ -1,7 +1,7 @@
 # RentCalc - Minh Bạch Hóa Chi Phí Dịch Vụ Thiết Yếu Nhà Trọ
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![Tests](https://img.shields.io/badge/tests-60%2F60%20passed-success.svg)
+![Tests](https://img.shields.io/badge/tests-62%2F62%20passed-success.svg)
 ![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
@@ -36,7 +36,7 @@
   - Tối ưu hiệu năng: Minify CSS Tailwind, endpoint kiểm tra sức khỏe `/health`.
   - Xử lý lỗi giao diện tùy biến: Trang 404 & 500, trạng thái xác thực động và nút Đăng xuất trên Navbar.
   - Sẵn sàng triển khai Production: `docker-compose.prod.yml`, `nginx.conf`, hướng dẫn [docs/DEPLOY.md](docs/DEPLOY.md).
-  - Kiểm thử tự động: **60/60 tests pass (100%)**, Coverage **85%**.
+  - Kiểm thử tự động: **62/62 tests pass (100%)**, Coverage **85%**.
 
 ---
 

@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
 from app.auth import get_current_user, get_current_user_optional, require_owner
+from app.core.month import validate_month
 from app.db.models import User
 from app.db.repositories.invoice_repo import InvoiceRepository
 from app.db.session import get_db
@@ -55,9 +56,10 @@ def generate_invoice(
     _: User = Depends(require_owner),
     db: Session = Depends(get_db),
 ):
+    valid_month = validate_month(month)
     service = CalculationService(db)
     invoice = service.generate_invoice(
-        room_id=room_id, month=month.strip(), force_recalculate=recalculate
+        room_id=room_id, month=valid_month, force_recalculate=recalculate
     )
     return RedirectResponse(f"/invoices/{invoice.id}", status_code=303)
 
