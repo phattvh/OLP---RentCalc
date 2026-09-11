@@ -101,6 +101,92 @@ def test_create_custom_five_tier_config():
     db.close()
 
 
+def test_create_config_validation_rejection():
+    """Kiểm thử cơ chế chặn lưu biểu giá không hợp lệ ngay tại tầng Web/API."""
+    cookies = get_auth_cookies("owner")
+
+    # 1. Fallback tier không tồn tại (fallback = 10 trong khi chỉ có 3 bậc)
+    res_bad_fallback = client.post(
+        "/admin/configs",
+        data={
+            "name": "Biểu giá sai fallback",
+            "vat_rate": "0.08",
+            "people_per_quota": "4",
+            "fallback_tier_number": "10",
+            "tier_qty": ["50", "50", ""],
+            "tier_price": ["1984", "2050", "2380"],
+            "tier_name": ["Bậc 1", "Bậc 2", "Bậc 3"],
+            "water_volume_price": "9000",
+            "water_person_price": "85000",
+            "water_vat": "0.05",
+            "water_env": "0.10",
+            "meter_max": "99999",
+        },
+        cookies=cookies,
+    )
+    assert res_bad_fallback.status_code == 400
+    assert "Bậc áp khi không kê khai" in res_bad_fallback.text
+    assert "Lỗi cấu hình:" in res_bad_fallback.text
+
+    # 2. Đơn giá bậc thang âm
+    res_bad_price = client.post(
+        "/admin/configs",
+        data={
+            "name": "Biểu giá đơn giá âm",
+            "vat_rate": "0.08",
+            "people_per_quota": "4",
+            "fallback_tier_number": "1",
+            "tier_qty": ["50", ""],
+            "tier_price": ["-100", "2050"],
+            "tier_name": ["Bậc 1", "Bậc 2"],
+            "water_volume_price": "9000",
+            "water_person_price": "85000",
+            "water_vat": "0.05",
+            "water_env": "0.10",
+            "meter_max": "99999",
+        },
+        cookies=cookies,
+    )
+    assert res_bad_price.status_code == 400
+    assert "không được là số âm" in res_bad_price.text
+
+    # 3. Thuế VAT âm
+    res_bad_vat = client.post(
+        "/admin/configs",
+        data={
+            "name": "Biểu giá VAT âm",
+            "vat_rate": "-0.05",
+            "people_per_quota": "4",
+            "fallback_tier_number": "1",
+            "tier_qty": ["50", ""],
+            "tier_price": ["1984", "2050"],
+            "tier_name": ["Bậc 1", "Bậc 2"],
+            "water_volume_price": "9000",
+            "water_person_price": "85000",
+            "water_vat": "0.05",
+            "water_env": "0.10",
+            "meter_max": "99999",
+        },
+        cookies=cookies,
+    )
+    assert res_bad_vat.status_code == 400
+    assert "Thuế suất VAT" in res_bad_vat.text
+
+
+def test_invoice_detail_page_and_share_link():
+    """Kiểm thử trang chi tiết hóa đơn và nút sao chép link công khai /share/{token}."""
+    cookies = get_auth_cookies("owner")
+    db = SessionLocal()
+    invoice = db.query(Invoice).first()
+    db.close()
+    assert invoice is not None
+
+    res = client.get(f"/invoices/{invoice.id}", cookies=cookies)
+    assert res.status_code == 200
+    assert "/share/" in res.text
+    assert "Sao chép link công khai" in res.text
+
+
 def test_invoices_list_page():
     cookies = get_auth_cookies("owner")
     res = client.get("/invoices", cookies=cookies)

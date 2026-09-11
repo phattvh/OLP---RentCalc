@@ -175,13 +175,15 @@
     </div>
 
     <!-- KHỐI 5: LINK CHIA SẺ HÓA ĐƠN CÔNG KHAI -->
-    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-between text-xs text-gray-600">
-        <div>
-            <span class="font-bold text-gray-800">🔗 Mã chia sẻ cho người thuê:</span>
-            <code class="ml-2 bg-white px-2 py-1 rounded border font-mono text-indigo-600">{{ share_token }}</code>
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-gray-600">
+        <div class="flex items-center space-x-2">
+            <span class="font-bold text-gray-800 whitespace-nowrap">🔗 Link tra cứu công khai:</span>
+            <a href="/share/{{ share_token }}" target="_blank" class="font-mono text-indigo-600 hover:text-indigo-800 hover:underline break-all bg-white px-2 py-1 rounded border border-gray-200">
+                /share/{{ share_token }}
+            </a>
         </div>
-        <button onclick="navigator.clipboard.writeText(window.location.href); alert('Đã sao chép link hóa đơn!');" class="px-3 py-1 bg-white border border-gray-300 rounded font-medium hover:bg-gray-100 text-gray-700">
-            Sao chép liên kết
+        <button onclick="const url = window.location.origin + '/share/{{ share_token }}'; navigator.clipboard.writeText(url); alert('Đã sao chép liên kết tra cứu công khai: ' + url);" class="inline-flex items-center justify-center px-3 py-1.5 bg-white border border-gray-300 rounded-md font-medium hover:bg-gray-100 text-gray-700 shadow-sm transition whitespace-nowrap">
+            📋 Sao chép link công khai
         </button>
     </div>
 </div>

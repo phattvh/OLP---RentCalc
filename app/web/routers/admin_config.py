@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
 from app.auth import require_owner
+from app.core.errors import ConfigError
 from app.db.session import get_db
 from app.services.config_service import ConfigService
 from app.web.templates import templates
@@ -110,12 +111,20 @@ async def create_config(
     meter_config = {"max_value": meter_max}
 
     service = ConfigService(db)
-    service.create_config(
-        name=name,
-        description=description,
-        electricity_config=electricity_config,
-        water_config=water_config,
-        meter_config=meter_config,
-        is_active=True,
-    )
-    return RedirectResponse("/admin/configs", status_code=303)
+    try:
+        service.create_config(
+            name=name,
+            description=description,
+            electricity_config=electricity_config,
+            water_config=water_config,
+            meter_config=meter_config,
+            is_active=True,
+        )
+        return RedirectResponse("/admin/configs", status_code=303)
+    except (ConfigError, ValueError) as err:
+        return templates.TemplateResponse(
+            request=request,
+            name="admin/configs/form.html.j2",
+            context={"error": str(err)},
+            status_code=400,
+        )

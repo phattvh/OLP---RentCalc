@@ -13,6 +13,8 @@
 - **Endpoint kiểm tra sức khỏe hệ thống:** Route `/health` chuẩn hóa phục vụ giám sát container Docker và pipeline CI/CD.
 - **Bảo mật xác thực & Bất biến hóa đơn:** Ký cookie bằng HMAC-SHA256 với secret nạp từ môi trường, bảo toàn nguyên vẹn snapshot và biểu giá hóa đơn lịch sử (immutability).
 - **Khả năng cấu hình toàn diện & Biểu giá động N-bậc:** Cho phép tùy biến số lượng bậc điện linh hoạt (3, 5, 6, N bậc - thêm/xóa bậc trực quan), cấu hình ngưỡng định mức từng bậc cơ sở (kWh) và giới hạn quay vòng công tơ (max meter) trực tiếp từ giao diện quản trị.
+- **Xác thực dữ liệu cấu hình biểu giá nghiêm ngặt (Config Payload Validation):** Chặn lưu các cấu hình không hợp lệ ngay từ tầng Web/Service (kiểm tra đơn giá không âm, thuế VAT [0, 1], phí BVMT [0, 1], định mức người > 0, fallback tier hợp lệ, bậc vô hạn duy nhất ở cuối).
+- **Chuẩn hóa liên kết chia sẻ hóa đơn công khai:** Cập nhật nút sao chép link trên trang chi tiết hóa đơn trỏ chính xác đến route tra cứu `/share/{token}` với đầy đủ origin và giao diện trực quan.
 
 ### Changed
 
@@ -22,7 +24,7 @@
 
 ### Tests
 
-- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404, trạng thái xác thực Navbar, bảo mật signed cookie HMAC, phân quyền RBAC, tính bất biến hóa đơn lịch sử, tạo biểu giá động 5 bậc và các ca kiểm thử biên (edge-cases) bậc thang điện: **58/58 tests pass 100%**, Code Coverage đạt **85%**.
+- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404, trạng thái xác thực Navbar, bảo mật signed cookie HMAC, phân quyền RBAC, tính bất biến hóa đơn lịch sử, tạo biểu giá động 5 bậc, kiểm tra chặn lưu biểu giá lỗi (HTTP 400), sao chép link tra cứu công khai: **60/60 tests pass 100%**, Code Coverage đạt **85%**.
 - Hoàn thành diễn tập chạy thử (dry-run) toàn bộ 7 ca kiểm thử chính thức của đề thi mà không có bất kỳ sai số nào.
 
 ---
