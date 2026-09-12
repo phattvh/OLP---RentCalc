@@ -15,7 +15,7 @@
 
 - **Đối tượng:** Phòng 101 (4 nhân khẩu $\rightarrow$ 1 định mức hộ gia đình theo Thông tư 60/2025/TT-BCT).
 
-1. Truy cập: **http://localhost:8000/properties** $\rightarrow$ chọn **"Nhà trọ Mẫu TP.HCM"** $\rightarrow$ chọn **"Phòng 101"**.
+1. **Đăng nhập tài khoản Chủ nhà:** Truy cập **http://localhost:8000** (hệ thống tự động chuyển hướng về giao diện `/login` khi chưa đăng nhập) $\rightarrow$ đăng nhập với tài khoản `owner` / `owner123` $\rightarrow$ vào mục **"Cơ sở & Phòng"** (`/properties`) $\rightarrow$ chọn **"Nhà trọ Mẫu TP.HCM"** $\rightarrow$ chọn **"Phòng 101"**.
 2. Nhấn nút **"+ Nhập chỉ số công tơ"**:
    - Điện: Tháng `2026-09`, số cũ `0`, số mới `120` (Tiêu thụ 120 kWh).
    - Nước: Tháng `2026-09`, số cũ `0`, số mới `16` (Tiêu thụ 16 m³).

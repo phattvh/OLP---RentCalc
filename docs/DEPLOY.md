@@ -1,10 +1,11 @@
-# Hướng dẫn triển khai Production (Production Deployment Guide)
+# Hướng dẫn triển khai Production
 
 Tài liệu hướng dẫn triển khai ứng dụng RentCalc lên máy chủ sản xuất sử dụng Docker, Docker Compose và Nginx.
 
 ---
 
 ## 1. Yêu cầu hệ thống (Prerequisites)
+
 - **Hệ điều hành:** Ubuntu 22.04 LTS hoặc Linux tương đương
 - **Docker Engine:** Phiên bản 24.0+
 - **Docker Compose:** Phiên bản v2+
@@ -24,6 +25,7 @@ cp .env.example .env
 ```
 
 Chỉnh sửa nội dung file `.env` phù hợp với thông số bảo mật production:
+
 ```ini
 POSTGRES_DB=rentcalc
 POSTGRES_USER=rentcalc_admin
@@ -50,6 +52,7 @@ docker compose -f docker-compose.prod.yml logs -f web
 ## 4. Cấu hình Nginx Reverse Proxy (Tùy chọn cho Domain & SSL)
 
 Sao chép file `nginx.conf` vào cấu hình Nginx của hệ thống:
+
 ```bash
 sudo cp nginx.conf /etc/nginx/sites-available/rentcalc
 sudo ln -s /etc/nginx/sites-available/rentcalc /etc/nginx/sites-enabled/
@@ -58,20 +61,23 @@ sudo systemctl reload nginx
 ```
 
 Cài đặt SSL Let's Encrypt tự động:
+
 ```bash
 sudo certbot --nginx -d rentcalc.example.com
 ```
 
 ---
 
-## 5. Kiểm tra tình trạng hoạt động (Health Check)
+## 5. Kiểm tra tình trạng hoạt động
 
 Kiểm tra endpoint `/health`:
+
 ```bash
 curl -i http://localhost:8000/health
 ```
 
 Kết quả mong đợi:
+
 ```json
 HTTP/1.1 200 OK
 content-type: application/json
@@ -81,7 +87,7 @@ content-type: application/json
 
 ---
 
-## 6. Sao lưu và Khôi phục dữ liệu (Backup & Restore)
+## 6. Sao lưu và khôi phục dữ liệu
 
 ```bash
 # Sao lưu cơ sở dữ liệu PostgreSQL (chạy trực tiếp qua docker compose)

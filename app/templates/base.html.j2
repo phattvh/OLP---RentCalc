@@ -19,7 +19,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 sm:h-16">
                 <!-- Logo & Version badge -->
                 <div class="flex items-center space-x-2.5">
-                    <a href="{{ '/my-invoices' if request.state.user and request.state.user.role == 'tenant' else '/' }}" class="flex items-center space-x-1.5 font-black text-2xl tracking-tight hover:text-indigo-100 transition" aria-label="RentCalc Trang chủ">
+                    <a href="{{ '/my-invoices' if request.state.user and request.state.user.role == 'tenant' else ('/' if request.state.user else '/login') }}" class="flex items-center space-x-1.5 font-black text-2xl tracking-tight hover:text-indigo-100 transition" aria-label="RentCalc Trang chủ">
                         <span class="text-white">Rent</span><span class="text-indigo-200">Calc</span>
                     </a>
                     <span class="px-2.5 py-0.5 text-xs bg-indigo-800 text-indigo-200 rounded-full font-mono font-semibold border border-indigo-600">v1.0.0</span>
@@ -27,15 +27,17 @@
 
                 <!-- Navigation đẩy hoàn toàn qua bên phải với ARIA label -->
                 <nav aria-label="Menu chính" class="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm font-medium mt-2 sm:mt-0 sm:ml-auto overflow-x-auto pb-1 sm:pb-0">
-                    {% if not request.state.user or request.state.user.role == 'owner' %}
-                    <a href="/" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Tổng quan</a>
-                    <a href="/properties" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Cơ sở & Phòng</a>
-                    <a href="/invoices" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Hóa đơn</a>
-                    <a href="/admin/configs" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Biểu giá</a>
-                    {% else %}
-                    <a href="/my-invoices" class="px-3.5 py-1.5 rounded-md bg-indigo-800 hover:bg-indigo-600 transition whitespace-nowrap text-indigo-100 font-semibold shadow-sm border border-indigo-600">
-                        🚪 Hóa đơn của tôi
-                    </a>
+                    {% if request.state.user %}
+                        {% if request.state.user.role == 'owner' %}
+                        <a href="/" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Tổng quan</a>
+                        <a href="/properties" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Cơ sở & Phòng</a>
+                        <a href="/invoices" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Hóa đơn</a>
+                        <a href="/admin/configs" class="px-3 py-1.5 rounded-md hover:bg-indigo-600 transition whitespace-nowrap">Biểu giá</a>
+                        {% elif request.state.user.role == 'tenant' %}
+                        <a href="/my-invoices" class="px-3.5 py-1.5 rounded-md bg-indigo-800 hover:bg-indigo-600 transition whitespace-nowrap text-indigo-100 font-semibold shadow-sm border border-indigo-600">
+                            🚪 Hóa đơn của tôi
+                        </a>
+                        {% endif %}
                     {% endif %}
 
                     <!-- Trạng thái Đăng nhập / Đăng xuất -->

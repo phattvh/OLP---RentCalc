@@ -6,16 +6,17 @@
 
 ### Added
 
-- **Hoàn thiện khả năng tiếp cận (Accessibility - a11y):** Tích hợp đầy đủ các thuộc tính WCAG/ARIA (`aria-label`, `aria-live="polite"`, `role="alert"`), nút skip-link "Bỏ qua menu điều hướng" cho người dùng bàn phím hoặc đọc màn hình.
-- **Trang báo lỗi giao diện tùy biến (Custom Error Pages):** Bổ sung trang lỗi 404 ("Không tìm thấy trang") và 500 ("Lỗi máy chủ nội bộ") đồng bộ với nhận diện thương hiệu RentCalc.
-- **Cấu hình triển khai Production hoàn chỉnh:** Cung cấp `docker-compose.prod.yml`, cấu hình Nginx Reverse Proxy (`nginx.conf`), và tài liệu hướng dẫn vận hành chi tiết tại `docs/DEPLOY.md`.
-- **Trạng thái xác thực động trên Navbar:** Hiển thị danh tính người dùng đăng nhập (`Chủ trọ` / `Khách`), liên kết truy cập nhanh "Hóa đơn của tôi" cho người thuê, và nút "Đăng xuất" an toàn.
-- **Endpoint kiểm tra sức khỏe hệ thống:** Route `/health` chuẩn hóa phục vụ giám sát container Docker và pipeline CI/CD.
-- **Bảo mật xác thực & Bất biến hóa đơn:** Ký cookie bằng HMAC-SHA256 với secret nạp từ môi trường, bảo toàn nguyên vẹn snapshot và biểu giá hóa đơn lịch sử (immutability).
-- **Khả năng cấu hình toàn diện & Biểu giá động N-bậc:** Cho phép tùy biến số lượng bậc điện linh hoạt (3, 5, 6, N bậc - thêm/xóa bậc trực quan), cấu hình ngưỡng định mức từng bậc cơ sở (kWh) và giới hạn quay vòng công tơ (max meter) trực tiếp từ giao diện quản trị.
-- **Xác thực dữ liệu cấu hình biểu giá nghiêm ngặt (Config Payload Validation):** Chặn lưu các cấu hình không hợp lệ ngay từ tầng Web/Service (kiểm tra đơn giá không âm, thuế VAT [0, 1], phí BVMT [0, 1], định mức người > 0, fallback tier hợp lệ, bậc vô hạn duy nhất ở cuối).
+- **Hoàn thiện khả năng tiếp cận (a11y):** Tích hợp đầy đủ các thuộc tính WCAG/ARIA (`aria-label`, `aria-live="polite"`, `role="alert"`), nút skip-link "Bỏ qua menu điều hướng (skip-link) cho người dùng bàn phím hoặc đọc màn hình.
+- **Trang báo lỗi giao diện tùy biến:** Bổ sung trang lỗi 404 ("Không tìm thấy trang") và 500 ("Lỗi máy chủ nội bộ") đồng bộ với nhận diện thương hiệu RentCalc.
+- **Cấu hình triển khai Production hoàn chỉnh:** Cung cấp `docker-compose.prod.yml`, cấu hình Nginx Reverse Proxy (`nginx.conf`) và tài liệu hướng dẫn vận hành chi tiết tại `docs/DEPLOY.md`.
+- **Trạng thái xác thực động trên Navbar:** Hiển thị danh tính người dùng đăng nhập (`Chủ trọ` / `Khách`), liên kết truy cập nhanh "Hóa đơn của tôi" cho người thuê và nút "Đăng xuất".
+- **Endpoint kiểm tra sức khỏe hệ thống:** Route `/health` phục vụ giám sát container Docker và pipeline CI/CD.
+- **Bảo mật xác thực & Bất biến hóa đơn:** Ký cookie bằng HMAC-SHA256 với secret nạp từ môi trường, bảo toàn nguyên vẹn snapshot và biểu giá hóa đơn lịch sử.
+- **Khả năng cấu hình toàn diện & Biểu giá động N-bậc:** Cho phép tùy biến số lượng bậc điện linh hoạt (3, 5, 6, N bậc - thêm/xóa bậc), cấu hình ngưỡng định mức từng bậc cơ sở (kWh) và giới hạn quay vòng công tơ từ giao diện admin.
+- **Xác thực dữ liệu cấu hình biểu giá:** Chặn lưu các cấu hình không hợp lệ ngay từ tầng Web/Service như kiểm tra đơn giá không âm, thuế VAT [0, 1], phí BVMT [0, 1], định mức người > 0, fallback tier hợp lệ, bậc vô hạn duy nhất ở cuối,...
 - **Chuẩn hóa liên kết chia sẻ hóa đơn công khai:** Cập nhật nút sao chép link trên trang chi tiết hóa đơn trỏ chính xác đến route tra cứu `/share/{token}` với đầy đủ origin và giao diện trực quan.
-- **Xác thực định dạng kỳ tính phí chuẩn hóa (Month Validation):** Kiểm tra chặt chẽ định dạng tháng theo chuẩn `YYYY-MM` (01-12) bằng regex qua hàm `validate_month()`, chặn đứng các dữ liệu rác hoặc sai quy chuẩn ngay tại router và service.
+- **Xác thực định dạng kỳ tính phí chuẩn hóa:** Kiểm tra chặt chẽ định dạng tháng theo chuẩn `YYYY-MM` (01-12) bằng regex qua hàm `validate_month()`, chặn đứng các dữ liệu rác hoặc sai quy chuẩn ngay tại router và service.
+- **Cổng xác thực bắt buộc (Auth Gateway):** Chặn người dùng chưa đăng nhập tiếp cận các trang quản trị nội bộ và Dashboard, tự động điều hướng về giao diện đăng nhập `/login` trong khi bảo lưu đầy đủ các route công khai `/share/{token}` và `/health`.
 
 ### Changed
 
@@ -25,8 +26,8 @@
 
 ### Tests
 
-- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404, trạng thái xác thực Navbar, bảo mật signed cookie HMAC, phân quyền RBAC, tính bất biến hóa đơn lịch sử, tạo biểu giá động 5 bậc, kiểm tra chặn lưu biểu giá lỗi (HTTP 400), sao chép link tra cứu công khai, xác thực định dạng tháng chuẩn `YYYY-MM`: **62/62 tests pass 100%**, Code Coverage đạt **85%**.
-- Hoàn thành diễn tập chạy thử (dry-run) toàn bộ 7 ca kiểm thử chính thức của đề thi mà không có bất kỳ sai số nào.
+- Bổ sung kiểm thử tự động cho router `/health`, trang lỗi 404, trạng thái xác thực Navbar, bảo mật signed cookie HMAC, phân quyền RBAC, tính bất biến hóa đơn lịch sử, tạo biểu giá động 5 bậc, kiểm tra chặn lưu biểu giá lỗi (HTTP 400), sao chép link tra cứu công khai, xác thực định dạng tháng chuẩn `YYYY-MM`, cơ chế tự động chuyển hướng unauthenticated về `/login`: **63/63 tests pass 100%**, Code Coverage đạt **85%**.
+- Hoàn thành chạy thử 7 ca kiểm thử của đề thi mà không có bất kỳ sai số nào.
 
 ---
 

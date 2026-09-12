@@ -118,3 +118,4 @@ Dương: người thuê trả thừa. Bằng 0: khớp. Âm: thu thấp hơn quy
 | §6         | tests/core/test_water.py                                        |
 | §7         | tests/core/test_rounding.py                                     |
 | §8         | tests/core/test_comparison.py                                   |
+| §10        | tests/core/test_month.py                                        |

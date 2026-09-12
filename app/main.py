@@ -4,6 +4,7 @@
 
 import os
 from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
@@ -70,7 +71,9 @@ def health():
 
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
-    """Bắt lỗi HTTP (như 404) và hiển thị giao diện tùy biến thân thiện."""
+    """Bắt lỗi HTTP (như 404, 401) và hiển thị giao diện tùy biến thân thiện."""
+    if exc.status_code == 401 and "text/html" in request.headers.get("accept", ""):
+        return RedirectResponse("/login", status_code=303)
     if exc.status_code == 404:
         return templates.TemplateResponse(
             request=request, name="errors/404.html.j2", status_code=404

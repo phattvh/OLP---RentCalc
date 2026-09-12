@@ -23,7 +23,9 @@ def index(
     db: Session = Depends(get_db),
     user: User | None = Depends(get_current_user_optional),
 ):
-    if user and user.role == "tenant":
+    if not user:
+        return RedirectResponse("/login", status_code=303)
+    if user.role == "tenant":
         return RedirectResponse("/my-invoices", status_code=303)
     prop_repo = PropertyRepository(db)
     config_repo = TariffConfigRepository(db)

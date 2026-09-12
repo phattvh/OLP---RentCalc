@@ -43,10 +43,23 @@ def test_healthcheck():
 
 
 def test_dashboard_page():
-    response = client.get("/")
+    cookies = get_auth_cookies("owner")
+    response = client.get("/", cookies=cookies)
     assert response.status_code == 200
     assert "RentCalc" in response.text
     assert "Bảng điều khiển" in response.text
+
+
+def test_unauthenticated_user_redirect_to_login():
+    """Chưa đăng nhập thì chỉ cho ở giao diện đăng nhập: / redirect về /login."""
+    res = client.get("/", follow_redirects=False)
+    assert res.status_code == 303
+    assert res.headers["location"] == "/login"
+
+    # Yêu cầu HTML tới trang bảo vệ cũng chuyển hướng về /login
+    res_html = client.get("/properties", headers={"accept": "text/html"}, follow_redirects=False)
+    assert res_html.status_code == 303
+    assert res_html.headers["location"] == "/login"
 
 
 def test_properties_pages():
@@ -404,10 +417,12 @@ def test_custom_404_page():
 
 def test_navbar_auth_state():
     """Kiểm thử hiển thị động trên Navbar theo trạng thái đăng nhập."""
-    # 1. Chưa đăng nhập: hiện nút Đăng nhập
-    res_anon = client.get("/")
+    # 1. Chưa đăng nhập: hiện nút Đăng nhập trên giao diện đăng nhập và ẩn toàn bộ menu quản trị
+    res_anon = client.get("/login")
     assert res_anon.status_code == 200
     assert "Đăng nhập" in res_anon.text
+    assert "Tổng quan" not in res_anon.text
+    assert "Cơ sở & Phòng" not in res_anon.text
 
     # 2. Đăng nhập Chủ trọ: hiện Chủ trọ và nút Đăng xuất
     db = SessionLocal()
